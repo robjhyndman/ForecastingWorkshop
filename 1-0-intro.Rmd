@@ -1,0 +1,276 @@
+---
+title: "Forecasting: principles and practice"
+author: "Rob J Hyndman"
+date: "Introduction to Forecasting"
+fontsize: 14pt
+output:
+  beamer_presentation:
+    theme: Monash
+    keep_tex: no
+    toc: false
+    fig_width: 7
+    fig_height: 4.3
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache=TRUE)
+library(fpp2)
+```
+
+# Background
+
+## Resources
+
+\large
+
+ * Slides
+ * Exercises
+ * Textbook
+ * Useful links
+
+\begin{alertblock}{}{\centerline{\Large\textbf{\url{robjhyndman.com/uwa2017}}}}
+\end{alertblock}
+
+## Brief bio
+
+  - Professor of Statistics, Monash University
+  - Editor-in-Chief, \textit{International Journal of Forecasting}
+
+\pause\vspace*{0.3cm}
+
+\begin{block}{How my forecasting methodology is used:}
+\begin{itemize}
+ \item Pharmaceutical Benefits \rlap{Scheme}
+ \item Cancer incidence and mortality
+ \item Electricity demand
+ \item Ageing population
+ \item Fertilizer sales
+\end{itemize}
+\end{block}
+
+
+\begin{textblock}{5.5}(6.8,7.8)\begin{alertblock}{}\Large robjhyndman.com\end{alertblock}\end{textblock}
+
+\vspace*{10cm}
+
+
+## Assumptions
+
+  * This is not an introduction to R. I assume you are broadly comfortable with R code and the RStudio environment.
+  * This is not a statistics course. I assume you are familiar with concepts such as the mean, standard deviation, quantiles, regression, normal distribution, likelihood, etc.
+  * This is not a theory course. I am not going to derive anything. I will teach you forecasting tools, when to use them and how to use them most effectively.
+
+
+## Key reference
+
+\large
+
+\begin{block}{}\bf
+\hangafter=1\hangindent=.3cm
+ {Hyndman, R.~J. \& Athanasopoulos, G. (2017) \emph{Forecasting: principles and practice}, 2nd ed.}
+\end{block}\pause
+\begin{alertblock}{}\Large
+\centerline{\bf OTexts.org/fpp2/}
+\end{alertblock}
+
+\pause
+
+  * Free and online
+  * Data sets in associated R package
+  * R code for examples
+
+## Poll: How experienced are you in forecasting
+
+  1. Guru: I wrote the book, done it for decades, now I do the conference circuit.
+  2. Expert: It has been my full time job for more than a decade.
+  3. Skilled: I have been doing it for years.
+  1. Comfortable: I understand it and have done it.
+  1. Learner: I am still learning.
+  1. Beginner: I have heard of it and would like to learn more.
+  1. Unknown: What is forecasting? Is that what the weather people do?
+
+
+## Poll: How proficient are you in using R?
+
+  1. Guru: The R core team come to me for advice.
+  1. Expert: I have written several packages on CRAN.
+  1. Skilled: I use it regularly and it is an important part of my job.
+  1. Comfortable: I use it often and am comfortable with the tool.
+  1. User: I use it sometimes, but I am often searching around for the right function.
+  1. Learner: I have used it a few times.
+  1. Beginner: I've managed to download and install it.
+  1. Unknown: Why are you speaking like a pirate?
+
+
+## Install required packages
+
+```
+install.packages("fpp2", dependencies=TRUE)
+```
+
+<!-- ## Getting help with R -->
+
+<!-- \small -->
+
+<!-- ``` -->
+<!-- # Search for terms -->
+<!-- ??forecasting -->
+
+<!-- # Detailed help -->
+<!-- ?forecast -->
+
+<!-- # Worked examples -->
+<!-- example("forecast.ar") -->
+
+<!-- # Similar names -->
+<!-- apropos("forecast") -->
+
+<!-- #Help on package -->
+<!-- help(package="fpp") -->
+<!-- ``` -->
+
+
+## Approximate outline
+
+\centering\fontsize{13}{15}\sf
+\begin{tabular}{rp{6.6cm}l}
+  \bf Day & \bf Topic                     & \bf Chapter \\
+  \midrule
+  1.1       & Time series graphics          & 2 \\
+  1.2       & The forecaster's toolbox      & 3 \\
+  1.3       & Seasonality and trends        & 6 \\
+  1.4       & Exponential smoothing         & 7 \\
+  \midrule
+  2.1       & ETS state space models        & 7 \\
+  2.2       & Transformations               & 3 \\
+  2.3       & Stationarity and differencing & 8 \\
+  2.4       & Non-seasonal ARIMA models     & 8 \\
+  2.5       & Seasonal ARIMA models         & 8 \\
+  \midrule
+  3.1       & Time series cross-validation  & 3 \\
+  3.2       & Dynamic regression            & 9 \\
+  3.3       & Hierarchical forecasting      & 10 \\
+  3.4       & Advanced models               & 11
+\end{tabular}
+
+
+# Case studies
+
+## CASE STUDY 1: Paperware company
+
+\small
+
+\begin{textblock}{7.6}(0.2,1.2)
+\textbf{Problem:} Want forecasts of each of hundreds of
+items. Series can be stationary, trended or seasonal. They currently
+have a large forecasting program written in-house but it doesn't seem
+to produce sensible forecasts. They want me to tell them what is
+wrong and fix it.
+\end{textblock}
+
+\placefig{8}{1.}{width=4.8cm}{tableware2}
+
+\begin{textblock}{12}(0.3,5.6)
+\structure{Additional information}\vspace*{-0.3cm}
+\begin{itemize}\tightlist
+  \item Program  written in COBOL making numerical calculations limited. It is not possible to do any optimisation.
+  \item Their programmer has little experience in numerical computing.
+  \item They employ no statisticians and want the program to produce forecasts automatically.
+\end{itemize}
+\end{textblock}
+
+
+## CASE STUDY 1: Paperware company
+
+\structure{Methods currently used}
+
+\begin{description}
+  \item[A] 12 month average
+  \item[C] 6 month average
+  \item[E] straight line regression over last 12 months
+  \item[G] straight line regression over last 6 months
+  \item[H] average slope between last year's and this year's values.\\
+  (Equivalent to differencing at lag 12 and taking mean.)
+  \item[I] Same as H except over 6 months.
+  \item[K] I couldn't understand the explanation.
+\end{description}
+
+
+
+## CASE STUDY 2: PBS
+
+\fullwidth{pills}
+
+
+## CASE STUDY 2: PBS
+\begin{block}{}
+The \structure{Pharmaceutical Benefits Scheme} (PBS) is the Australian government drugs subsidy scheme.
+\end{block}
+\pause
+
+  * Many drugs bought from pharmacies are subsidised to allow more equitable access to modern drugs.
+  * The cost to government is determined by the number and types of drugs purchased. Currently nearly 1\% of GDP.
+  * The total cost is budgeted based on forecasts of drug usage.
+
+## CASE STUDY 2: PBS
+
+\fullheight{pbs2}
+
+## CASE STUDY 2: PBS
+
+  * In 2001: \$4.5 billion budget, under-forecasted by \$800~million.
+  * Thousands of products. Seasonal demand.
+  * Subject to covert marketing, volatile products, uncontrollable expenditure.
+  * Although monthly data available for 10 years, data are aggregated to annual values, and only the first three years are used in estimating the forecasts.
+  * All forecasts being done with the \texttt{FORECAST} function in MS-Excel!
+
+
+\begin{alertblock}<2>{}
+\textbf{Problem:} How to do the forecasting better?
+\end{alertblock}
+\vspace{5cm}
+
+
+## \large CASE STUDY 3: Airline
+
+\fullwidth{ansettlogo}
+
+
+## CASE STUDY 3: Airline
+
+```{r}
+autoplot(melsyd[,"Economy.Class"],
+  main="Economy class passengers: Melbourne-Sydney",
+  xlab="Year",ylab="Thousands")
+```
+
+
+## CASE STUDY 3: Airline
+
+```{r}
+autoplot(melsyd[,"Economy.Class"],
+  main="Economy class passengers: Melbourne-Sydney",
+  xlab="Year",ylab="Thousands")
+```
+
+\begin{textblock}{4.2}(7,6)
+\begin{alertblock}{}
+Not the real data! Or is it?
+\end{alertblock}
+\end{textblock}
+
+
+## CASE STUDY 3: Airline
+
+\textbf{Problem:} how to forecast passenger traffic on major routes?
+
+### Additional information
+
+  * They can provide a large amount of data on previous routes.
+  * Traffic is affected by school holidays, special events such as
+the Grand Prix, advertising campaigns, competition behaviour, etc.
+  * They have a highly capable team of people who are able to do
+most of the computing.
+
