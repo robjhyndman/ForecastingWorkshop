@@ -16,7 +16,6 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
-source("nicefigs.R")
 ```
 
 # Time series with complex seasonality
@@ -147,8 +146,7 @@ telec %>% tbats %>% forecast %>% autoplot
 
 \alert{Simplest version: linear regression}
 
-\def\layersep{3cm}
-\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=2.5cm]
     \tikzstyle{every pin edge}=[<-,shorten <=1pt]
     \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
     \tikzstyle{input neuron}=[neuron, fill=green!50];
@@ -181,8 +179,7 @@ telec %>% tbats %>% forecast %>% autoplot
 
 \alert{Nonlinear model with one hidden layer}
 
-\def\layersep{2.5cm}
-\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=2.5cm]
     \tikzstyle{every pin edge}=[<-,shorten <=1pt]
     \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
     \tikzstyle{input neuron}=[neuron, fill=green!50];
@@ -198,7 +195,7 @@ telec %>% tbats %>% forecast %>% autoplot
     % Draw the hidden layer nodes
     \foreach \name / \y in {1,...,3}
         \path[yshift=-.5cm]
-            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+            node[hidden neuron] (H-\name) at (2.5cm,-\y cm) {};
 
     % Draw the output layer node
     \node[output neuron,pin={[pin edge={->}]right:Output}, right of=H-2] (O) {};

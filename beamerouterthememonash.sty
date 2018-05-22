@@ -1,0 +1,36 @@
+% Based on infolines theme by Till Tantau <tantau@users.sourceforge.net>
+%
+% This program can be redistributed and/or modified under the terms
+% of the GNU Public License, version 2.
+% Modified by Raymond Nepstad to create the ift theme
+% Modified again by Rob Hyndman for to create the monash theme
+
+\mode<presentation>
+
+
+\setbeamercolor{title in footer}{fg=white,bg=monashblue!95!white}
+\setbeamercolor{section in footer}{fg=white,bg=monashblue!85!white}
+\setbeamercolor{pagenumber in footer}{fg=white,bg=monashblue!75!white}
+
+
+
+\defbeamertemplate*{footline}{ifttheme}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in footer}%
+    \insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{section in footer}%
+    \insertsectionhead
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,center]{pagenumber in footer}%
+   \insertframenumber{} \hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%\setbeamersize{text margin left=1em,text margin right=1em,text margin top=3cm}
+
+\mode
+<all>

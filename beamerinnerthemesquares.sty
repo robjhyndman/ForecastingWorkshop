@@ -1,0 +1,37 @@
+\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/outer/beamerinnerthemesquares.sty,v 1.0 2005/12/08 09:48:48 tantau Exp $
+
+\mode<presentation>
+
+% larger squares for enumeration
+\defbeamertemplate{enumerate item}{mysquare}
+{
+  \hbox{%
+    \usebeamerfont*{item projected}%
+    \usebeamercolor[bg]{item projected}%
+    \vrule width4ex height2.7ex depth.7ex%
+    \hskip-4ex%
+    \hbox to4ex{%
+      \hfil%
+      \color{fg}\raisebox{.2ex}{\insertenumlabel}%
+      \hfil}%
+  }%
+}
+[action]
+{\setbeamerfont{item projected}{size=\scriptsize}}
+\setbeamertemplate{enumerate item}[mysquare]
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{items}[mysquare]
+
+\setbeamertemplate{section in toc}[square]
+\setbeamerfont{section number projected}{size=\normalsize}
+\setbeamerfont{item projected}{size=\normalsize}
+
+\usesubitemizeitemtemplate{%
+    \tiny\raise1.5pt\hbox{\color{beamerstructure}$\blacktriangleright$}%
+}
+\usesubsubitemizeitemtemplate{%
+    \tiny\raise1.5pt\hbox{\color{beamerstructure}$\bigstar$}%
+}
+
+\mode
+<all>

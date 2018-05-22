@@ -18,7 +18,6 @@ output:
 knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
 library(gridExtra)
-source("nicefigs.R")
 ```
 
 #Autoregressive models

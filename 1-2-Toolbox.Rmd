@@ -17,9 +17,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
-source("nicefigs.R")
 ```
-
 
 # The statistical forecasting perspective
 
@@ -67,7 +65,6 @@ autoplot(forecast(fit)) +
 
 \vspace*{10cm}
 
-
 ##Statistical forecasting
 
 - Thing to be forecast: a random variable, $y_t$.
@@ -78,10 +75,7 @@ autoplot(forecast(fit)) +
 - With time series, \rlap{${y}_{t|t-1} = y_t | \{y_1,y_2,\dots,y_{t-1}\}$. }
 - $\hat{y}_{T+h|T} =\text{E}[y_{T+h} | y_1,\dots,y_T]$ (an $h$-step forecast taking account of all observations up to time $T$).
 
-
-
 # Some simple forecasting methods
-
 
 ## Some simple forecasting methods
 \small\vspace*{-0.5cm}
@@ -99,7 +93,6 @@ autoplot(beer2) +
 \end{alertblock}
 \end{textblock}
 
-
 ## Some simple forecasting methods
 \small\vspace*{-0.5cm}
 
@@ -108,7 +101,6 @@ autoplot(window(pigs/1e3, start=1990)) +
   xlab("Year") + ylab("thousands") +
   ggtitle("Number of pigs slaughtered in Victoria")
 ```
-
 
 \begin{textblock}{7}(0.2,8.7)
 \begin{alertblock}{}
@@ -129,7 +121,6 @@ autoplot(dj) + xlab("Day") +
 \small{How would you forecast these data?}
 \end{alertblock}
 \end{textblock}
-
 
 ## Some simple forecasting methods
 
@@ -183,8 +174,6 @@ autoplot(beer2) +
   guides(colour=guide_legend(title="Forecast"))
 ```
 
-
-
 ## Some simple forecasting methods
 
 ```{r djf,  message=FALSE, warning=FALSE, echo=FALSE, fig.height=4.6}
@@ -206,7 +195,6 @@ autoplot(dj2) +
   * Naïve:  `naive(y, h=20)`
   * Seasonal naïve: `snaive(y, h=20)`
   * Drift: `rwf(y, drift=TRUE, h=20)`
-
 
 # Forecasting residuals
 
@@ -260,10 +248,7 @@ autoplot(dj2) + xlab("Day") + ylab("") +
 Note: $e_t$ are one-step-forecast residuals
 \end{alertblock}
 
-
 ## Example: Dow-Jones index
-
-
 
 ```{r}
 res <- residuals(naive(dj2))
@@ -271,9 +256,7 @@ autoplot(res) + xlab("Day") + ylab("") +
   ggtitle("Residuals from naive method")
 ```
 
-
 ## Example: Dow-Jones index
-
 
 ```{r}
 qplot(res, bins=nclass.FD(na.omit(res))) +
@@ -282,12 +265,9 @@ qplot(res, bins=nclass.FD(na.omit(res))) +
 
 ## Example: Dow-Jones index
 
-
 ```{r}
 ggAcf(res) + ggtitle("ACF of residuals")
 ```
-
-
 
 ## ACF of residuals
 
@@ -296,7 +276,6 @@ ggAcf(res) + ggtitle("ACF of residuals")
   * So a standard residual diagnostic is to check the ACF of the residuals of a forecasting method.
 
   * We \emph{expect} these to look like white noise.
-
 
 ## Portmanteau tests
 
@@ -311,7 +290,6 @@ where $h$  is max lag being considered and $T$ is number of observations.
   * My preferences: $h=10$ for non-seasonal data, $h=2m$ for seasonal data.
   * If each $r_k$ close to zero, $Q$ will be **small**.
   * If some $r_k$ values large (positive or negative), $Q$ will be **large**.
-
 
 ## Portmanteau tests
 
@@ -354,7 +332,6 @@ Box.test(res, lag=10, fitdf=0)
 Box.test(res, lag=10, fitdf=0, type="Lj")
 ```
 
-
 ## `checkresiduals` function
 
 ```{r, echo=TRUE, fig.height=4}
@@ -382,8 +359,6 @@ res <- residuals(object)
 \fontsize{48}{60}\sf\centering
 \textbf{Lab Session 3}
 
-
-
 # Evaluating forecast accuracy
 
 ## Measures of forecast accuracy
@@ -399,9 +374,6 @@ Let $y_t$ denote the $t$th observation and $\pred{y}{t}{t-1}$ denote its forecas
 
   * MAE, MSE, RMSE are all scale dependent.
   * MAPE is scale independent but is only sensible if $y_t\gg 0$ for all $t$, and $y$ has a natural zero.
-
-
-
 
 ## Measures of forecast accuracy
 
@@ -421,7 +393,6 @@ works well. Then MASE is equivalent to MAE relative to a naïve method.
 
 \vspace*{10cm}
 
-
 ## Measures of forecast accuracy
 
 \begin{block}{Mean Absolute Scaled Error}
@@ -440,11 +411,9 @@ works well. Then MASE is equivalent to MAE relative to a seasonal naïve method.
 
 \vspace*{10cm}
 
-
-
 ## Measures of forecast accuracy
 
-```{r beeraccuracy"}
+```{r beeraccuracy}
 beer2 <- window(ausbeer,start=1992,end=c(2005,4))
 beerfc1 <- meanf(beer2,h=10)
 beerfc2 <- rwf(beer2,h=10)
@@ -460,7 +429,6 @@ autoplot(tmp) + xlab("Year") + ylab("Megalitres") +
                      name="Forecast Method")
 ```
 
-
 ## Measures of forecast accuracy
 
 ```{r echo=FALSE}
@@ -473,8 +441,6 @@ colnames(tab) <- c("RMSE","MAE","MAPE","MASE")
 rownames(tab) <- c("Mean method", "Naïve method", "Seasonal naïve method")
 knitr::kable(tab, digits=2)
 ```
-
-
 
 ## Training and test sets
 
@@ -491,7 +457,6 @@ Training set & Test set \\
   * The test set must not be used for \emph{any} aspect of model development or calculation of forecasts.
 
   * Forecast accuracy is based only on the test set.
-
 
 ## Training and test sets
 \fontsize{13}{15}\sf
@@ -512,7 +477,6 @@ accuracy(fc, ausbeer)
 accuracy(fc)
 ```
 
-
 ## Beware of over-fitting
 
   * A model which fits the data well does not necessarily forecast well.
@@ -525,10 +489,6 @@ accuracy(fc)
 
   * Accuracy measures computed for errors in test set only.
 
-
-
-
-
 ## Poll: true or false?
 
   1. Good forecast methods should have normally distributed residuals.
@@ -537,12 +497,9 @@ accuracy(fc)
   4. If your model doesn't forecast well, you should make it more complicated.
   5. Always choose the model with the best forecast accuracy as measured on the test set.
 
-
-
 #Lab session 4
 ##
 
 \fontsize{48}{60}\sf\centering
 \textbf{Lab Session 4}
-
 
