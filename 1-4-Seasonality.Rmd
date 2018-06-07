@@ -5,11 +5,10 @@ date: "1.3&nbsp; Seasonality and trends"
 fontsize: 14pt
 output:
   beamer_presentation:
-    theme: Monash
-    keep_tex: no
-    toc: false
     fig_width: 7
-    fig_height: 4.3
+    fig_height: 3.5
+    highlight: tango
+    theme: metropolis
     includes:
       in_header: header.tex
 ---

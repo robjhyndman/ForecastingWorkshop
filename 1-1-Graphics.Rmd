@@ -5,11 +5,10 @@ date: "1.1&nbsp; Time series graphics"
 fontsize: 14pt
 output:
   beamer_presentation:
-    theme: Monash
-    keep_tex: no
-    toc: false
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4
+    highlight: tango
+    theme: metropolis
     includes:
       in_header: header.tex
 ---
@@ -18,8 +17,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
 source("nicefigs.R")
+options(width=50)
 ```
-
 
 # Time series in R
 
@@ -32,7 +31,7 @@ A time series is stored in a `ts` object in R:
  - a list of numbers
  - information about times those numbers were recorded.
 
-###Example
+### Example
 
 ```{r tstable, echo=FALSE, cache=TRUE}
 x <- c(123,39,78,52,110)
@@ -71,16 +70,14 @@ Half-hourly      & \only<14->{48 \emph{or} 336 \emph{or} 17,532} & \only<15>{1}
 \end{tabular}
 
 ## Australian GDP
+\fontsize{13}{15}\sf
 
-```
+```r
 ausgdp <- ts(x, frequency=4, start=c(1971,3))
 ```
 
-\vspace*{-0.4cm}
-
   * Class: "ts"
   * Print and plotting methods available.
-
 
 ```{r, echo=TRUE}
 ausgdp
@@ -94,12 +91,9 @@ autoplot(ausgdp)
 
 ## Residential electricity sales
 
-
 ```{r}
 elecsales
 ```
-
-
 
 # Time plots
 
@@ -120,15 +114,12 @@ autoplot(a10) + ylab("$ million") + xlab("Year") +
          ggtitle("Antidiabetic drug sales")
 ```
 
-
-#Lab session 1
+# Lab session 1
 
 ##
 
 \fontsize{48}{60}\sf\centering
 \textbf{Lab Session 1}
-
-
 
 # Seasonal plots
 
@@ -142,9 +133,7 @@ ggseasonplot(a10, ylab="$ million",
   ggtitle("Seasonal plot: antidiabetic drug sales")
 ```
 
-
 ## Seasonal plots
-
 
   * Data plotted against the individual "seasons" in which the data were observed.  (In this case a "season" is a month.)
   * Something like a time plot except that the data from each season are overlapped.
@@ -155,29 +144,24 @@ ggseasonplot(a10, ylab="$ million",
 
 \small
 
-```{r, fig.height=3.}
+```{r, fig.height=5, out.width="7.5cm"}
 ggseasonplot(a10, polar=TRUE) + ylab("$ million")
 ```
 
 ## Seasonal subseries plots
 
-\small
+\fontsize{10}{12}\sf
 
 ```{r, echo=TRUE, fig.height=3.5}
 ggsubseriesplot(a10) + ylab("$ million") +
   ggtitle("Seasonal subseries plot: antidiabetic drug sales")
 ```
 
-
-
 ## Seasonal subseries plots
 
   * Data for each season collected together in time plot as separate time series.
   * Enables the underlying seasonal pattern to be seen clearly, and changes in seasonality over time to be visualized.
   * In R: `ggsubseriesplot`
-
-
-
 
 ## Quarterly Australian Beer Production
 
@@ -186,13 +170,11 @@ beer <- window(ausbeer,start=1992)
 autoplot(beer)
 ```
 
-
 ## Quarterly Australian Beer Production
 
 ```{r}
 ggseasonplot(beer,year.labels=TRUE)
 ```
-
 
 ## Quarterly Australian Beer Production
 
@@ -200,33 +182,29 @@ ggseasonplot(beer,year.labels=TRUE)
 ggsubseriesplot(beer)
 ```
 
-
 # Seasonal or cyclic?
 
-##Time series patterns
+## Time series patterns
 
 Trend
   : pattern exists when there is a long-term increase or decrease in the data.
-  
+
 Seasonal
   : pattern exists when a series is influenced by seasonal factors (e.g., the quarter of the year, the month, or day of the week).
-  
+
 Cyclic
   : pattern exists when data exhibit rises and falls that are \emph{not of fixed period} (duration usually of at least 2 years).
 
+## Time series components
 
-##Time series components
-
-###Differences between seasonal and cyclic patterns:
-
+### Differences between seasonal and cyclic patterns:
 
 * seasonal pattern constant length; cyclic pattern variable length
 * average length of cycle longer than length of seasonal pattern
 * magnitude of cycle more variable than magnitude of seasonal pattern
 
-
-
 ## Time series patterns
+\small
 
 ```{r}
 autoplot(window(elec, start=1980)) +
@@ -235,6 +213,7 @@ autoplot(window(elec, start=1980)) +
 ```
 
 ## Time series patterns
+\small
 
 ```{r}
 autoplot(bricksq) +
@@ -242,8 +221,8 @@ autoplot(bricksq) +
   xlab("Year") + ylab("million units")
 ```
 
-
 ## Time series patterns
+\small
 
 ```{r}
 autoplot(hsales) +
@@ -252,6 +231,7 @@ autoplot(hsales) +
 ```
 
 ## Time series patterns
+\small
 
 ```{r}
 autoplot(ustreas) +
@@ -260,6 +240,7 @@ autoplot(ustreas) +
 ```
 
 ## Time series patterns
+\small
 
 ```{r}
 autoplot(lynx) +
@@ -281,14 +262,13 @@ autoplot(lynx) +
 The timing of peaks and troughs is predictable with seasonal data, but unpredictable in the long term with cyclic data.
 \end{alertblock}
 
-
 # Lag plots and autocorrelation
 
 ## Example: Beer production
 
 ```r
 beer <- window(ausbeer, start=1992)
-gglagplot(beer, lags=9, do.lines=FALSE, 
+gglagplot(beer, lags=9, do.lines=FALSE,
   continuous=FALSE)
 ```
 
@@ -305,44 +285,20 @@ gglagplot(beer, lags=9, do.lines=FALSE, continuous=FALSE)
 different values of $k$.
   * The autocorrelations are the correlations associated
 with these scatterplots.
-
-## Autocorrelation
-
-**Covariance** and **correlation**: measure extent of **linear relationship** between two variables ($y$ and $X$).\pause
-
-**Autocovariance** and **autocorrelation**: measure linear relationship between **lagged values** of a time series $y$.\pause
-
-\begin{tabbing}
-We measure the relationship between:~~\=  $y_t$ and $y_{t-1}$\\
-\> $y_t$ and $y_{t-2}$\\
-\> $y_t$ and $y_{t-3}$\\
-\> etc.
-\end{tabbing}
-
-
-
-
-## Autocorrelation
-
-We denote the sample autocovariance at lag $k$ by $c_k$ and the sample autocorrelation at lag $k$ by $r_k$.  Then define
-
-\begin{block}{}\vspace*{-0.6cm}
-\begin{align*}
-c_k &= \frac{1}{T}\sum_{t=k+1}^T (y_t-\bar{y})(y_{t-k}-\bar{y}) \\[0.cm]
-\text{and}\qquad
-r_{k} &= c_k/c_0
-\end{align*}\vspace*{-0.8cm}
-\end{block}\pause
-
-  * $r_1$ indicates how successive values of  $y$  relate to each other
-  * $r_2$ indicates how  $y$ values two periods apart relate to each other
-  * $r_k$ is \textit{almost} the same as the sample correlation between $y_t$ and $y_{t-k}$.
+  * ACF (autocorrelation function):
+     * $r_1=\text{Correlation}(y_{t}, y_{t-1})$
+     * $r_2=\text{Correlation}(y_{t}, y_{t-2})$
+     * $r_3=\text{Correlation}(y_{t}, y_{t-3})$
+     * etc.
+  * If there is **seasonality**, the ACF at the seasonal lag (e.g., 12 for monthly data) will be **large and positive**.
 
 
 ## Autocorrelation
 
 \small
-Results for first 9 lags for beer data:\footnotesize
+Results for first 9 lags for beer data:
+
+\footnotesize
 
 ```{r, echo=FALSE}
 beeracf <- matrix(acf(c(beer), lag.max=9,
@@ -353,26 +309,9 @@ knitr::kable(beeracf, booktabs=TRUE,
              format.args=list(nsmall=3))
 ```
 
-```{r beeracf, fig.height=2.7}
+```{r beeracf, fig.height=2.5}
 ggAcf(beer)
 ```
-
-
-## Autocorrelation
-
-  * $r_{4}$  higher than for the other lags. This is due to **the seasonal pattern in the data**: the peaks tend to be **4 quarters** apart and the troughs tend to be **2 quarters** apart.
-  * $r_2$ is more negative than for the other lags because troughs tend to be 2 quarters behind peaks.
-  * Together, the autocorrelations at lags 1, 2, \dots, make up the \emph{autocorrelation} or ACF.
-  * The plot is known as a **correlogram**
-
-
-
-## Recognizing seasonality in a time series
-
-If there is seasonality, the ACF at the seasonal lag (e.g., 12 for monthly data) will be **large and positive**.
-
-  * For seasonal monthly data, a large ACF value will be seen at lag 12 and possibly also at lags 24, 36, \dots
-  * For seasonal quarterly data, a large ACF value will be seen at lag 4 and possibly also at lags 8, 12, \dots
 
 ## Aus monthly electricity production
 
@@ -387,18 +326,21 @@ autoplot(elec2)
 ggAcf(elec2, lag.max=48)
 ```
 
-## Aus monthly electricity production
+## Google stock price
 
-Time plot shows clear trend and seasonality.
+```{r}
+autoplot(goog)
+```
 
-The same features are reflected in the ACF.
+## Google stock price
 
-  * The slowly decaying ACF indicates trend.
-  * The ACF peaks at lags 12, 24, 36, \dots, indicate seasonality of length 12.
+```{r}
+ggAcf(goog, lag.max=100)
+```
 
 ## Which is which?
 
-```{r, fig.height=6, fig.width=12, echo=FALSE}
+```{r, fig.height=6, fig.width=12, echo=FALSE, out.width="11.7cm"}
 tp1 <- autoplot(cowtemp) + xlab("") + ylab("chirps per minute") +
   ggtitle("1. Daily temperature of cow")
 tp2 <- autoplot(USAccDeaths/1e3) + xlab("") + ylab("thousands") +
@@ -425,12 +367,12 @@ autoplot(wn)
 ```
 
 \only<2>{
-\begin{textblock}{10}(1.4,6)
-\begin{block}{}
+\begin{textblock}{10}(1.4,7)
+\begin{alertblock}{}
 White noise data is uncorrelated across time with zero mean and constant variance.
 
-(Technically, we require independence as well.)
-\end{block}
+(Technically, we require independence as well7)
+\end{alertblock}
 \end{textblock}}
 
 ## Example: White noise
@@ -444,7 +386,7 @@ print(xtable::xtable(t(wnacf)),
     booktabs=TRUE,
     include.colnames = FALSE,
     hline.after = FALSE,
-    size='small',
+    size='footnotesize',
     comment=FALSE,
     floating=FALSE)
 ```
@@ -456,47 +398,16 @@ endpdf()
 ```
 
 \placefig{4.5}{1.6}{width=8cm}{wnacf}
+\vspace*{0.3cm}
 
-\centerline\textbf{Sample autocorrelations for white noise series.}
-
-For uncorrelated data, we would expect each
-autocorrelation to be close to zero.
-
-
-
-## \large Sampling distribution of autocorrelations
-
-Sampling distribution of $r_k$ for white noise data is asymptotically N(0,$1/T$).\pause
-
-  *  95% of all $r_k$ for white noise must lie within $\pm 1.96/\sqrt{T}$.
-  * If this is not the case, the series is probably not WN.
-  * Common to plot lines at $\pm 1.96/\sqrt{T}$ when plotting ACF.
-These are the \textcolor{orange}{\textbf{\emph{critical values}}}.
-
-
-
-## Autocorrelation
-
-\placefig{5}{1.6}{width=8cm}{wnacf}
-
-\begin{textblock}{4.8}(0.2,1.5)
-\structure{Example:}
-
-$T=36$ and so critical values at $\pm
-1.96/\sqrt{36} = \pm 0.327$.
-
-All autocorrelation coefficients lie within these
-limits, confirming  that the data are white noise. (More precisely, the data cannot be \\
-distinguished \rlap{from white noise.)}
-\end{textblock}
-
-
-
+ * Sample autocorrelations for white noise series.
+ * Expect each autocorrelation to be close to zero.
+ * Blue lines show 95% critical values.
 
 ## Example: Pigs slaughtered
-\fontsize{13}{13}\sf
+\fontsize{12}{13}\sf
 
-```{r}
+```{r, fig.height=3.5}
 pigs2 <- window(pigs, start=1990)
 autoplot(pigs2) +
   xlab("Year") + ylab("thousands") +
@@ -509,29 +420,7 @@ autoplot(pigs2) +
 ggAcf(pigs2)
 ```
 
-## Example: Pigs slaughtered
-
-Monthly total number of pigs slaughtered
-in the state of Victoria, Australia, from January 1990 through August 1995.
-(Source: Australian Bureau of Statistics.)\pause
-
-
-  * Difficult to detect pattern in time plot.
-  * ACF shows some significant autocorrelation at lags 1, 2, and 3.
-  * $r_{12}$ relatively large although not significant.  This may indicate
-some slight seasonality.
-
-\pause
-
-These show the series is **not a white noise series**.
-
-## Combination graph
-
-```{r, echo=TRUE, fig.height=3.6}
-ggtsdisplay(pigs2, plot.type='scatter')
-```
-
-#Lab session 2
+# Lab session 2
 
 ##
 

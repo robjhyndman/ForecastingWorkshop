@@ -5,10 +5,10 @@ date: "3.4&nbsp; Advanced methods"
 fontsize: 14pt
 output:
   beamer_presentation:
-    theme: Monash
-    toc: no
     fig_width: 7
-    fig_height: 4.3
+    fig_height: 3.5
+    highlight: tango
+    theme: metropolis
     includes:
       in_header: header.tex
 ---
@@ -135,7 +135,7 @@ telec %>% tbats %>% forecast %>% autoplot
 
 # Lab session 17
 
-## 
+##
 
 \fontsize{48}{60}\sf\centering
 \textbf{Lab Session 17}
@@ -286,7 +286,7 @@ fit %>% forecast(h=20, PI=TRUE) %>% autoplot
 
 # Lab session 19
 
-## 
+##
 
 \fontsize{48}{60}\sf\centering
 

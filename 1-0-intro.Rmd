@@ -5,11 +5,10 @@ date: "Introduction to Forecasting"
 fontsize: 14pt
 output:
   beamer_presentation:
-    theme: Monash
-    keep_tex: no
-    toc: false
     fig_width: 7
-    fig_height: 4.3
+    fig_height: 3.5
+    highlight: tango
+    theme: metropolis
     includes:
       in_header: header.tex
 ---
@@ -30,7 +29,7 @@ library(fpp2)
  * Textbook
  * Useful links
 
-\begin{alertblock}{}{\centerline{\Large\textbf{\url{robjhyndman.com/uwa2017}}}}
+\begin{alertblock}{}{\centerline{\Large\textbf{\url{robjhyndman.com/nyc2018}}}}
 \end{alertblock}
 
 ## Brief bio
@@ -69,7 +68,7 @@ library(fpp2)
 
 \begin{block}{}\bf
 \hangafter=1\hangindent=.3cm
- {Hyndman, R.~J. \& Athanasopoulos, G. (2017) \emph{Forecasting: principles and practice}, 2nd ed.}
+ {Hyndman, R.~J. \& Athanasopoulos, G. (2018) \emph{Forecasting: principles and practice}, 2nd ed.}
 \end{block}\pause
 \begin{alertblock}{}\Large
 \centerline{\bf OTexts.org/fpp2/}
@@ -134,25 +133,26 @@ install.packages("fpp2", dependencies=TRUE)
 
 ## Approximate outline
 
-\centering\fontsize{13}{15}\sf
+\centering\fontsize{13}{14}\sf
 \begin{tabular}{rp{6.6cm}l}
   \bf Day & \bf Topic                     & \bf Chapter \\
   \midrule
-  1.1       & Time series graphics          & 2 \\
-  1.2       & The forecaster's toolbox      & 3 \\
-  1.3       & Seasonality and trends        & 6 \\
-  1.4       & Exponential smoothing         & 7 \\
+  1.1     & Time series graphics          & 2 \\
+  1.2     & Benchmark methods             & 3 \\
+  1.3     & Forecast evaluation           & 3 \\
+  1.3     & Seasonality and trends        & 6 \\
+  1.4     & Exponential smoothing         & 7 \\
   \midrule
-  2.1       & ETS state space models        & 7 \\
-  2.2       & Transformations               & 3 \\
-  2.3       & Stationarity and differencing & 8 \\
-  2.4       & Non-seasonal ARIMA models     & 8 \\
-  2.5       & Seasonal ARIMA models         & 8 \\
+  2.1     & ETS state space models        & 7 \\
+  2.2     & Transformations               & 3 \\
+  2.3     & Stationarity and differencing & 8 \\
+  2.4     & Non-seasonal ARIMA models     & 8 \\
+  2.5     & Seasonal ARIMA models         & 8 \\
   \midrule
-  3.1       & Time series cross-validation  & 3 \\
-  3.2       & Dynamic regression            & 9 \\
-  3.3       & Hierarchical forecasting      & 10 \\
-  3.4       & Advanced models               & 11
+  3.1     & Dynamic regression            & 9 \\
+  3.2     & Multiple seasonality          & 11 \\
+  3.3     & Hierarchical forecasting      & 10 \\
+  3.4     & Some practical issues         & 12
 \end{tabular}
 
 
@@ -201,7 +201,7 @@ wrong and fix it.
 
 ## CASE STUDY 2: PBS
 
-\fullwidth{pills}
+\full{pills}
 
 
 ## CASE STUDY 2: PBS
@@ -216,7 +216,7 @@ The \structure{Pharmaceutical Benefits Scheme} (PBS) is the Australian governmen
 
 ## CASE STUDY 2: PBS
 
-\fullheight{pbs2}
+\full{pbs2}
 
 ## CASE STUDY 2: PBS
 
@@ -235,7 +235,7 @@ The \structure{Pharmaceutical Benefits Scheme} (PBS) is the Australian governmen
 
 ## \large CASE STUDY 3: Airline
 
-\fullwidth{ansettlogo}
+\full{ansettlogo}
 
 
 ## CASE STUDY 3: Airline
@@ -273,4 +273,97 @@ Not the real data! Or is it?
 the Grand Prix, advertising campaigns, competition behaviour, etc.
   * They have a highly capable team of people who are able to do
 most of the computing.
+
+
+# The statistical forecasting perspective
+
+## Sample futures
+
+```{r austa1, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, fig.width=9, fig.height=6}
+fit <- ets(austa)
+df <- cbind(austa, simulate(fit,10))
+for(i in seq(9))
+  df <- cbind(df, simulate(fit,10))
+colnames(df) <- c("Data", paste("Future",1:10))
+autoplot(df) +
+  ylim(min(austa),10) +
+  ylab("Millions of visitors") + xlab("Year") +
+  ggtitle("Total international visitors to Australia") +
+ scale_colour_manual(values=c('#000000',rainbow(10)),
+                     breaks=c("Data",paste("Future",1:10)),
+                     name=" ") +
+  ylim(.85,10.0)
+```
+
+## Forecast intervals
+
+```{r austa2, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, fig.width=8.6, fig.height=6}
+autoplot(forecast(fit)) +
+  ylab("Millions of visitors") + xlab("Year") +
+  ggtitle("Forecasts of total international visitors to Australia") +
+  ylim(0.85,10.0)
+```
+
+
+# What can we forecast?
+
+## Forecasting is difficult
+
+\full{hopecasts2}
+
+## What can we forecast?
+
+\full{nasdaq-stock-market}
+
+## What can we forecast?
+
+\full{Forex2}
+
+## What can we forecast?
+
+\full{pills}
+
+## What can we forecast?
+
+\full{elecwires2}
+
+## What can we forecast?
+
+\full{AusBOM}
+
+
+## What can we forecast?
+
+\full{ts22015}
+
+## What can we forecast?
+
+\full{comet}
+
+
+## Which is easiest to forecast?
+
+ 1. daily electricity demand in 3 days time
+ 2. timing of next Halley's comet appearance
+ 3. time of sunrise this day next year
+ 4. Google stock price tomorrow
+ 5. Google stock price in 6 months time
+ 6. maximum temperature tomorrow
+ 7. exchange rate of \$US/AUS next week
+ 8. total sales of drugs in Australian pharmacies next month
+
+\pause
+
+ - how do we measure "easiest"?
+ - what makes something easy/difficult to forecast?
+
+## Factors affecting forecastability
+
+Something is easier to forecast if:
+
+ - we have a good understanding of the factors that contribute to it
+ - there is lots of data available;
+ - the forecasts cannot affect the thing we are trying to forecast.
+ - there is relatively low natural/unexplainable random variation.
+ - the future is somewhat similar to the past
 
