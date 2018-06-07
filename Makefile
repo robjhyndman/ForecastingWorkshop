@@ -19,3 +19,6 @@ clean:
 	rm -rfv *_files/
 	rm -rfv 3-3-Hierarchical.pdf
 	rm -rfv 3-5-Wrapup.pdf
+
+deploy:
+	rsync -zrvce 'ssh -p 18765' $(TARGETS) robjhynd@m80.siteground.biz:public_html/nyc2018
