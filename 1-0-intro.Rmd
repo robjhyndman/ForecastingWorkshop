@@ -226,13 +226,6 @@ The \structure{Pharmaceutical Benefits Scheme} (PBS) is the Australian governmen
   * Although monthly data available for 10 years, data are aggregated to annual values, and only the first three years are used in estimating the forecasts.
   * All forecasts being done with the \texttt{FORECAST} function in MS-Excel!
 
-
-\begin{alertblock}<2>{}
-\textbf{Problem:} How to do the forecasting better?
-\end{alertblock}
-\vspace{5cm}
-
-
 ## \large CASE STUDY 3: Airline
 
 \full{ansettlogo}
