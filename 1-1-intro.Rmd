@@ -1,7 +1,7 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "Introduction to Forecasting"
+date: "1.1&nbsp; Introduction to Forecasting"
 fontsize: 14pt
 output:
   beamer_presentation:
@@ -50,7 +50,7 @@ library(fpp2)
 \end{block}
 
 
-\begin{textblock}{5.5}(6.8,7.8)\begin{alertblock}{}\Large robjhyndman.com\end{alertblock}\end{textblock}
+\begin{textblock}{5.5}(6.8,0)\begin{alertblock}{}\Large robjhyndman.com\end{alertblock}\end{textblock}
 
 \vspace*{10cm}
 
@@ -93,6 +93,8 @@ library(fpp2)
 
 ## Poll: How proficient are you in using R?
 
+\fontsize{14}{15}\sf
+
   1. Guru: The R core team come to me for advice.
   1. Expert: I have written several packages on CRAN.
   1. Skilled: I use it regularly and it is an important part of my job.
@@ -105,7 +107,7 @@ library(fpp2)
 
 ## Install required packages
 
-```
+```r
 install.packages("fpp2", dependencies=TRUE)
 ```
 

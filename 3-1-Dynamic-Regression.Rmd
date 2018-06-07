@@ -1,7 +1,7 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "3.2&nbsp; Dynamic regression"
+date: "3.1&nbsp; Dynamic regression"
 fontsize: 14pt
 output:
   beamer_presentation:

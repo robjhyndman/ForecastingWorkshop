@@ -22,9 +22,9 @@ library(fpp2)
 # Benchmark methods
 
 ## Some simple forecasting methods
-\small\vspace*{-0.5cm}
+\small
 
-```{r, fig.height=4.6, echo=FALSE}
+```{r, fig.height=4.2, echo=FALSE}
 beer2 <- window(ausbeer, start=1992)
 autoplot(beer2) +
   xlab("Year") + ylab("megalitres") +
@@ -38,9 +38,9 @@ autoplot(beer2) +
 \end{textblock}
 
 ## Some simple forecasting methods
-\small\vspace*{-0.5cm}
+\small
 
-```{r, fig.height=4.6, echo=FALSE}
+```{r, fig.height=4.2, echo=FALSE}
 autoplot(window(pigs/1e3, start=1990)) +
   xlab("Year") + ylab("thousands") +
   ggtitle("Number of pigs slaughtered in Victoria")
@@ -53,9 +53,9 @@ autoplot(window(pigs/1e3, start=1990)) +
 \end{textblock}
 
 ## Some simple forecasting methods
-\small\vspace*{-0.5cm}
+\small
 
-```{r, fig.height=4.6, echo=FALSE}
+```{r, fig.height=4.2, echo=FALSE}
 autoplot(dj) + xlab("Day") +
   ggtitle("Dow-Jones index") + ylab("")
 ```
@@ -88,7 +88,7 @@ autoplot(dj) + xlab("Day") +
 ### Seasonal naïve method
 
   * Forecasts equal to last value from same season.
-  * Forecasts: $\hat{y}_{T+h|T} =y_{T+h-km}$ where $m=$ seasonal period and $k=\lfloor (h-1)/m\rfloor$+1.
+  * Forecasts: $\hat{y}_{T+h|T} =y_{T+h-km}$ where $m=$ seasonal period and $k$ is integer part of $(h-1)/m$.
 
 ## Some simple forecasting methods
 
@@ -149,7 +149,7 @@ autoplot(dj2) +
  - Sometimes drop the subscript: $\hat{y}_t \equiv \hat{y}_{t|t-1}$.
  - Often not true forecasts since parameters are estimated on all data.
 
-###For example:
+### For example:
 
  - $\hat{y}_{t} = \bar{y}$ for average method.
  - $\hat{y}_{t} = y_{t-1} + (y_{T}-y_1)/(T-1)$ for drift method.
@@ -159,29 +159,30 @@ autoplot(dj2) +
 \begin{block}{}
 \textbf{Residuals in forecasting:} difference between observed value and its fitted value: $e_t = y_t-\hat{y}_{t|t-1}$.
 \end{block}
-\pause\fontsize{13}{15}\sf
+\pause\fontsize{13}{14}\sf
 
-\structure{Assumptions}
+\alert{Assumptions}
 
   1. $\{e_t\}$ uncorrelated. If they aren't, then information left in  residuals that should be used in computing forecasts.
   2. $\{e_t\}$ have mean zero. If they don't, then forecasts are biased.
 
 \pause
 
-\structure{Useful properties} (for prediction intervals)
+\alert{Useful properties} (for prediction intervals)
 
   3. $\{e_t\}$ have constant variance.
   4. $\{e_t\}$ are normally distributed.
 
-## Example: Dow-Jones index
+## Example: Google stock price
+\fontsize{10}{10}\sf
 
-```{r, echo=FALSE, fig.height=4.6}
-dj2 <- window(dj, end=250)
-autoplot(dj2) + xlab("Day") + ylab("") +
-  ggtitle("Dow Jones Index (daily ending 15 Jul 94)")
+```{r dj3, echo=TRUE}
+autoplot(goog200) +
+  xlab("Day") + ylab("Closing Price (US$)") +
+  ggtitle("Google Stock (daily ending 6 December 2013)")
 ```
 
-## Example: Dow-Jones index
+## Example: Google stock price
 
 \structure{Na\"{\i}ve forecast:}
 
@@ -192,24 +193,38 @@ autoplot(dj2) + xlab("Day") + ylab("") +
 Note: $e_t$ are one-step-forecast residuals
 \end{alertblock}
 
-## Example: Dow-Jones index
+## Example: Google stock price
+\fontsize{10}{10}\sf
 
-```{r}
-res <- residuals(naive(dj2))
-autoplot(res) + xlab("Day") + ylab("") +
-  ggtitle("Residuals from naive method")
+```{r dj4, echo=TRUE, warning=FALSE}
+fits <- fitted(naive(goog200))
+autoplot(goog200, series="Data") +
+  autolayer(fits, series="Fitted") +
+  xlab("Day") + ylab("Closing Price (US$)") +
+  ggtitle("Google Stock (daily ending 6 December 2013)")
 ```
 
-## Example: Dow-Jones index
+## Example: Google stock price
+\fontsize{10}{10}\sf
 
-```{r}
-qplot(res, bins=nclass.FD(na.omit(res))) +
+```{r dj5, echo=TRUE}
+res <- residuals(naive(goog200))
+autoplot(res) + xlab("Day") + ylab("") +
+  ggtitle("Residuals from naïve method")
+```
+
+## Example: Google stock price
+\fontsize{11}{11}\sf
+
+```{r dj6, warning=FALSE}
+gghistogram(res, add.normal=TRUE) +
   ggtitle("Histogram of residuals")
 ```
 
-## Example: Dow-Jones index
+## Example: Google stock price
+\fontsize{11}{11}\sf
 
-```{r}
+```{r dj7}
 ggAcf(res) + ggtitle("ACF of residuals")
 ```
 
@@ -219,25 +234,18 @@ ggAcf(res) + ggtitle("ACF of residuals")
 
   * So a standard residual diagnostic is to check the ACF of the residuals of a forecasting method.
 
-  * We \emph{expect} these to look like white noise.
+  * We *expect* these to look like white noise.
+
+## `checkresiduals` function
+
+```{r, echo=TRUE, fig.height=4}
+checkresiduals(naive(goog200))
+```
 
 ## Portmanteau tests
+\fontsize{14}{14.5}\sf
 
-Consider a \textit{whole set} of $r_{k}$  values, and develop a test to see whether the set is significantly different from a zero set.\pause
-
-\begin{block}{Box-Pierce test\phantom{g}}
-\centerline{$\displaystyle
-Q = T \sum_{k=1}^h r_k^2$}
-where $h$  is max lag being considered and $T$ is number of observations.
-\end{block}
-
-  * My preferences: $h=10$ for non-seasonal data, $h=2m$ for seasonal data.
-  * If each $r_k$ close to zero, $Q$ will be **small**.
-  * If some $r_k$ values large (positive or negative), $Q$ will be **large**.
-
-## Portmanteau tests
-
-Consider a \textit{whole set} of $r_{k}$  values, and develop a test to see whether the set is significantly different from a zero set.
+Test whether *set* of $r_{k}$  values are significantly different from a zero set.
 
 \begin{block}{Ljung-Box test}
 \centerline{$\displaystyle
@@ -246,43 +254,16 @@ where $h$  is max lag being considered and $T$ is number of observations.
 \end{block}
 
   * My preferences: $h=10$ for non-seasonal data, $h=2m$ for seasonal data.
-  * Better performance, especially in small samples.
+  * If each $r_k$ close to zero, $Q$ will be **small**.
+  * p-value measures probability of results if residuals are WN.
 
 \vspace*{10cm}
 
-## Portmanteau tests
-
-  * If data are WN, $Q^*$ has $\chi^2$ distribution with  $(h - K)$ degrees of freedom where $K=$ no.\ parameters in model.
-  * When applied to raw data, set $K=0$.
-  * For the Dow-Jones example,
-
-\fontsize{12}{13}\sf
-
-```{r, echo=TRUE}
-# lag=h and fitdf=K
-Box.test(res, lag=10, fitdf=0)
-```
-
-## Portmanteau tests
-
-  * If data are WN, $Q^*$ has $\chi^2$ distribution with  $(h - K)$ degrees of freedom where $K=$ no.\ parameters in model.
-  * When applied to raw data, set $K=0$.
-  * For the Dow-Jones example,
-
-\fontsize{12}{13}\sf
-
-```{r, echo=TRUE}
-# lag=h and fitdf=K
-Box.test(res, lag=10, fitdf=0, type="Lj")
-```
-
 ## `checkresiduals` function
 
-```{r, echo=TRUE, fig.height=4}
-checkresiduals(naive(dj2))
+```r
+checkresiduals(naive(goog200))
 ```
-
-## `checkresiduals` function
 
 ```{r, echo=FALSE}
 object <- naive(dj2)
@@ -297,7 +278,7 @@ res <- residuals(object)
       cat(paste("Model df: ",0,".   Total lags used: ",10,"\n\n",sep=""))
 ```
 
-#Lab session 3
+# Lab session 3
 ##
 
 \fontsize{48}{60}\sf\centering
@@ -305,16 +286,72 @@ res <- residuals(object)
 
 # Evaluating forecast accuracy
 
+## Training and test sets
+
+```{r traintest, fig.height=1, echo=FALSE, cache=TRUE}
+train = 1:18
+test = 19:24
+par(mar=c(0,0,0,0))
+plot(0,0,xlim=c(0,26),ylim=c(0,2),xaxt="n",yaxt="n",bty="n",xlab="",ylab="",type="n")
+arrows(0,0.5,25,0.5,0.05)
+points(train, train*0+0.5, pch=19, col="blue")
+points(test,  test*0+0.5,  pch=19, col="red")
+text(26,0.5,"time")
+text(10,1,"Training data",col="blue")
+text(21,1,"Test data",col="red")
+```
+
+-   A model which fits the training data well will not necessarily forecast well.
+-   A perfect fit can always be obtained by using a model with enough parameters.
+-   Over-fitting a model to data is just as bad as failing to identify a systematic pattern in the data.
+  * The test set must not be used for \emph{any} aspect of model development or calculation of forecasts.
+  * Forecast accuracy is based only on the test set.
+
+## Forecast errors
+
+Forecast "error": the difference between an observed value and its forecast.
+$$
+  e_{T+h} = y_{T+h} - \hat{y}_{T+h|T},
+$$
+where the training data is given by $\{y_1,\dots,y_T\}$
+
+- Unlike residuals, forecast errors on the test set involve multi-step forecasts.
+- These are *true* forecast errors as the test data is not used in computing $\hat{y}_{T+h|T}$.
+
 ## Measures of forecast accuracy
 
-Let $y_t$ denote the $t$th observation and $\pred{y}{t}{t-1}$ denote its forecast based on all previous data, where $t=1,\dots,T$. Then the following measures are useful.\vspace*{-0.7cm}
+```{r beeraccuracy, echo=FALSE, fig.height=4}
+beer2 <- window(ausbeer,start=1992,end=c(2007,4))
+beerfit1 <- meanf(beer2,h=10)
+beerfit2 <- rwf(beer2,h=10)
+beerfit3 <- snaive(beer2,h=10)
+tmp <- cbind(Data=window(ausbeer, start=1992),
+             Mean=beerfit1[["mean"]],
+             Naive=beerfit2[["mean"]],
+             SeasonalNaive=beerfit3[["mean"]])
+autoplot(tmp) + xlab("Year") + ylab("Megalitres") +
+  ggtitle("Forecasts for quarterly beer production") +
+  scale_color_manual(values=c('#000000','#1b9e77','#d95f02','#7570b3'),
+                     breaks=c("Mean","Naive","SeasonalNaive"),
+                     name="Forecast Method")
+```
 
+## Measures of forecast accuracy
+
+\begin{tabular}{rl}
+$y_{T+h}=$ & $(T+h)$th observation, $h=1,\dots,H$ \\
+$\pred{y}{T+h}{T}=$ & its forecast based on data up to time $T$. \\
+$e_{T+h} =$  & $y_{T+h} - \pred{y}{T+h}{T}$
+\end{tabular}\vspace*{0.3cm}
+
+\begin{block}{}\vspace*{-0.2cm}
 \begin{align*}
-\text{MAE} &= T^{-1}\sum_{t=1}^T |y_t - \pred{y}{t}{t-1}| \\[-0.2cm]
-\text{MSE} &= T^{-1}\sum_{t=1}^T (y_t - \pred{y}{t}{t-1})^2 \quad
-\text{RMSE} &= \sqrt{T^{-1}\sum_{t=1}^T (y_t - \pred{y}{t}{t-1})^2} \\[-0.1cm]
-\text{MAPE} &= 100T^{-1}\sum_{t=1}^T |y_t - \pred{y}{t}{t-1}|/|y_t|
-\end{align*}\pause\vspace*{-0.2cm}
+\text{MAE} &= \text{mean}(|e_{T+h}|) \\[-0.2cm]
+\text{MSE} &= \text{mean}(e_{T+h}^2) \qquad
+&&\hspace*{-0.4cm}\text{RMSE}\hspace*{-0.2cm} &= \sqrt{\text{mean}(e_{T+h}^2)} \\[-0.1cm]
+\text{MAPE} &= 100\text{mean}(|e_{T+h}|/ |y_{T+h}|)
+\end{align*}
+\end{block}\pause\vspace*{-0.2cm}
 
   * MAE, MSE, RMSE are all scale dependent.
   * MAPE is scale independent but is only sensible if $y_t\gg 0$ for all $t$, and $y$ has a natural zero.
@@ -355,17 +392,10 @@ works well. Then MASE is equivalent to MAE relative to a seasonal naïve method.
 
 \vspace*{10cm}
 
+
 ## Measures of forecast accuracy
 
-```{r beeraccuracy}
-beer2 <- window(ausbeer,start=1992,end=c(2005,4))
-beerfc1 <- meanf(beer2,h=10)
-beerfc2 <- rwf(beer2,h=10)
-beerfc3 <- snaive(beer2,h=10)
-tmp <- cbind(Data=window(ausbeer, start=1992),
-             Mean=beerfc1$mean,
-             Naive=beerfc2$mean,
-             SeasonalNaive=beerfc3$mean)
+```{r beeraccuracyagain, echo=FALSE, fig.height=4}
 autoplot(tmp) + xlab("Year") + ylab("Megalitres") +
   ggtitle("Forecasts for quarterly beer production") +
   scale_color_manual(values=c('#000000','#1b9e77','#d95f02','#7570b3'),
@@ -374,64 +404,31 @@ autoplot(tmp) + xlab("Year") + ylab("Megalitres") +
 ```
 
 ## Measures of forecast accuracy
+\fontsize{11}{11}\sf
 
-```{r echo=FALSE}
-beer3 <- window(ausbeer, start=2006)
+```r
+beer2 <- window(ausbeer, start=1992, end=c(2007,4))
+beer3 <- window(ausbeer, start=2008)
+beerfit1 <- meanf(beer2, h=10)
+beerfit2 <- rwf(beer2, h=10)
+beerfit3 <- snaive(beer2, h=10)
+accuracy(beerfit1, beer3)
+accuracy(beerfit2, beer3)
+accuracy(beerfit3, beer3)
+```
+
+\fontsize{13}{15}\sf
+
+```{r beertable, echo=FALSE}
+beer3 <- window(ausbeer, start=2008)
 tab <- matrix(NA,ncol=4,nrow=3)
-tab[1,] <- accuracy(beerfc1, ausbeer)[2,c(2,3,5,6)]
-tab[2,] <- accuracy(beerfc2, ausbeer)[2,c(2,3,5,6)]
-tab[3,] <- accuracy(beerfc3, ausbeer)[2,c(2,3,5,6)]
+tab[1,] <- accuracy(beerfit1, beer3)[2,c(2,3,5,6)]
+tab[2,] <- accuracy(beerfit2, beer3)[2,c(2,3,5,6)]
+tab[3,] <- accuracy(beerfit3, beer3)[2,c(2,3,5,6)]
 colnames(tab) <- c("RMSE","MAE","MAPE","MASE")
 rownames(tab) <- c("Mean method", "Naïve method", "Seasonal naïve method")
 knitr::kable(tab, digits=2)
 ```
-
-## Training and test sets
-
-\begin{tabular}{|c|c|}
-\multicolumn{2}{c}{\structure{Available data}}\\
-\hline
-\hspace*{8.7cm} & \\
-Training set & Test set \\
-(e.g., 80\%) & (e.g., 20\%) \\
-&\\
-\hline
-\end{tabular}
-
-  * The test set must not be used for \emph{any} aspect of model development or calculation of forecasts.
-
-  * Forecast accuracy is based only on the test set.
-
-## Training and test sets
-\fontsize{13}{15}\sf
-
-\fontsize{13}{16}\sf
-
-```r
-beer2 <- window(ausbeer, start=1992, end=c(2005,4))
-fc <- snaive(beer2, h=10)
-accuracy(fc, ausbeer)
-```
-
-\pause
-
-\structure{In-sample accuracy} (one-step forecasts)
-
-```
-accuracy(fc)
-```
-
-## Beware of over-fitting
-
-  * A model which fits the data well does not necessarily forecast well.
-
-  * A perfect fit can always be obtained by using a model with enough parameters. (Compare $R^2$)
-
-  *  Over-fitting a model to data is as bad as failing to identify the systematic pattern in the data.
-
-  * Problems can be overcome by measuring true \emph{out-of-sample} forecast accuracy.  That is, total data divided into "training" set and "test" set.  Training set used to estimate parameters. Forecasts are made for test set.
-
-  * Accuracy measures computed for errors in test set only.
 
 ## Poll: true or false?
 
@@ -441,7 +438,15 @@ accuracy(fc)
   4. If your model doesn't forecast well, you should make it more complicated.
   5. Always choose the model with the best forecast accuracy as measured on the test set.
 
-#Lab session 4
+## Poll: true or false?
+
+  1. Good forecast methods should have normally distributed residuals.
+  2. A model with small residuals will give good forecasts.
+  3. The best measure of forecast accuracy is MAPE.
+  4. If your model doesn't forecast well, you should make it more complicated.
+  5. Always choose the model with the best forecast accuracy as measured on the test set.
+
+# Lab session 4
 ##
 
 \fontsize{48}{60}\sf\centering
