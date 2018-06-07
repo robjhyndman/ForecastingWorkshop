@@ -1,7 +1,7 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "1.2&nbsp; The forecaster's toolbox"
+date: "1.3&nbsp; Forecast evaluation"
 fontsize: 14pt
 output:
   beamer_presentation:
@@ -18,63 +18,8 @@ knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
 ```
 
-# The statistical forecasting perspective
 
-## The statistical forecasting perspective
-
-```{r, echo=FALSE, fig.height=6, fig.width=7.9}
-austa %>% autoplot +
-  ylim(0.85,8.5) + xlim(min(time(austa)), 2020) +
-  ylab("Millions of visitors") + xlab("Year") +
-  ggtitle("Total international visitors to Australia")
-```
-
-\only<2>{\vspace*{-7cm}\par\begin{alertblock}{}\textbf{Forecasting is estimating how the sequence of observations will continue into the future.}\phantom{g}
-\end{alertblock}}
-
-\vspace*{10cm}
-
-## Sample futures
-
-```{r austa1, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, fig.width=9, fig.height=6}
-fit <- ets(austa)
-df <- cbind(austa, simulate(fit,10))
-for(i in seq(9))
-  df <- cbind(df, simulate(fit,10))
-colnames(df) <- c("Data", paste("Future",1:10))
-autoplot(df) +
-  ylab("Millions of visitors") + xlab("Year") +
-  ggtitle("Total international visitors to Australia") +
- scale_colour_manual(values=c('#000000',rainbow(10)),
-                     breaks=c("Data",paste("Future",1:10)),
-                     name=" ") +
-  ylim(.85,8.5)
-```
-
-\vspace*{10cm}
-
-## Forecast intervals
-
-```{r austa2, echo=FALSE, message=FALSE, warning=FALSE, cache=TRUE, fig.width=8.6, fig.height=6}
-autoplot(forecast(fit)) +
-  ylab("Millions of visitors") + xlab("Year") +
-  ggtitle("Total international visitors to Australia") +
-  ylim(0.85,8.5)
-```
-
-\vspace*{10cm}
-
-##Statistical forecasting
-
-- Thing to be forecast: a random variable, $y_t$.
-- Forecast distribution: If ${\cal I}$ is all observations, then $y_{t} |{\cal I}$ means ``the random variable $y_{t}$ given what we know in \rlap{${\cal I}$''.}
-- The ``point forecast'' is the mean (or median) of $y_{t} |{\cal I}$
-- The ``forecast variance'' is $\text{var}[y_{t} |{\cal I}]$
-- A prediction interval or ``interval forecast'' is a range of values of $y_t$ with high \rlap{probability.}
-- With time series, \rlap{${y}_{t|t-1} = y_t | \{y_1,y_2,\dots,y_{t-1}\}$. }
-- $\hat{y}_{T+h|T} =\text{E}[y_{T+h} | y_1,\dots,y_T]$ (an $h$-step forecast taking account of all observations up to time $T$).
-
-# Some simple forecasting methods
+# Benchmark methods
 
 ## Some simple forecasting methods
 \small\vspace*{-0.5cm}
