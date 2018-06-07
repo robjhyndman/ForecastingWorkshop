@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -133,15 +133,15 @@ install.packages("fpp2", dependencies=TRUE)
 
 ## Approximate outline
 
-\centering\fontsize{13}{14}\sf
+\centering\fontsize{12}{12}\sf
 \begin{tabular}{rp{6.6cm}l}
   \bf Day & \bf Topic                     & \bf Chapter \\
   \midrule
   1.1     & Time series graphics          & 2 \\
   1.2     & Benchmark methods             & 3 \\
   1.3     & Forecast evaluation           & 3 \\
-  1.3     & Seasonality and trends        & 6 \\
-  1.4     & Exponential smoothing         & 7 \\
+  1.4     & Seasonality and trends        & 6 \\
+  1.5     & Exponential smoothing         & 7 \\
   \midrule
   2.1     & ETS state space models        & 7 \\
   2.2     & Transformations               & 3 \\
@@ -160,42 +160,53 @@ install.packages("fpp2", dependencies=TRUE)
 
 ## CASE STUDY 1: Paperware company
 
-\small
+\fontsize{12}{14}\sf
 
-\begin{textblock}{7.6}(0.2,1.2)
+\begin{textblock}{7.6}(0.2,1.4)
 \textbf{Problem:} Want forecasts of each of hundreds of
 items. Series can be stationary, trended or seasonal. They currently
 have a large forecasting program written in-house but it doesn't seem
 to produce sensible forecasts. They want me to tell them what is
 wrong and fix it.
-\end{textblock}
 
-\placefig{8}{1.}{width=4.8cm}{tableware2}
+\vspace*{-0.2cm}
 
-\begin{textblock}{12}(0.3,5.6)
-\structure{Additional information}\vspace*{-0.3cm}
-\begin{itemize}\tightlist
-  \item Program  written in COBOL making numerical calculations limited. It is not possible to do any optimisation.
-  \item Their programmer has little experience in numerical computing.
-  \item They employ no statisticians and want the program to produce forecasts automatically.
+\textbf{Additional information}\vspace*{-0.3cm}\fontsize{12}{13}\sf
+\begin{itemize}\itemsep=0cm\parskip=0cm
+\item  Program  written in COBOL making numerical calculations limited. It is not possible to do any optimisation.
+\item Their programmer has little experience in numerical computing.
+\item They employ no statisticians and want the program to produce forecasts \rlap{automatically.}
 \end{itemize}
 \end{textblock}
+
+\placefig{8}{1.4}{width=4.8cm}{tableware2}
 
 
 ## CASE STUDY 1: Paperware company
 
-\structure{Methods currently used}
+### Methods currently used
 
-\begin{description}
-  \item[A] 12 month average
-  \item[C] 6 month average
-  \item[E] straight line regression over last 12 months
-  \item[G] straight line regression over last 6 months
-  \item[H] average slope between last year's and this year's values.\\
+A
+: 12 month average
+
+C
+: 6 month average
+
+E
+: straight line regression over last 12 months
+
+G
+: straight line regression over last 6 months
+
+H
+: average slope between last year's and this year's values.
   (Equivalent to differencing at lag 12 and taking mean.)
-  \item[I] Same as H except over 6 months.
-  \item[K] I couldn't understand the explanation.
-\end{description}
+
+I
+: Same as H except over 6 months.
+
+K
+: I couldn't understand the explanation.
 
 
 
@@ -206,7 +217,7 @@ wrong and fix it.
 
 ## CASE STUDY 2: PBS
 \begin{block}{}
-The \structure{Pharmaceutical Benefits Scheme} (PBS) is the Australian government drugs subsidy scheme.
+The \alert{Pharmaceutical Benefits Scheme} (PBS) is the Australian government drugs subsidy scheme.
 \end{block}
 \pause
 

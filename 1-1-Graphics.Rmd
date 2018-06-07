@@ -24,9 +24,9 @@ options(width=50)
 
 ## `ts` objects and `ts` function
 
-\small
+\fontsize{13}{13}\sf
 
-A time series is stored in a `ts` object in R:
+A time series is stored in a `ts` object in R:\vspace*{-0.3cm}
 
  - a list of numbers
  - information about times those numbers were recorded.

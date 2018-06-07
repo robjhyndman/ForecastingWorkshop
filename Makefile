@@ -21,4 +21,4 @@ clean:
 	rm -rfv 3-5-Wrapup.pdf
 
 deploy:
-	rsync -zrvce 'ssh -p 18765' $(TARGETS) robjhynd@m80.siteground.biz:public_html/nyc2018
+	rsync -zrvce 'ssh -p 18765' $(TARGETS) labs/* robjhynd@m80.siteground.biz:public_html/nyc2018
