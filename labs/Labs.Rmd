@@ -1,5 +1,5 @@
 ---
-title: "Retail time series analysis"
+title: "Lab Sessions: Forecasting using R"
 author: "Your name"
 date: "25 June 2018"
 output: html_document

@@ -18,7 +18,6 @@ knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
 ```
 
-
 # Benchmark methods
 
 ## Some simple forecasting methods
@@ -278,12 +277,10 @@ res <- residuals(object)
       cat(paste("Model df: ",0,".   Total lags used: ",10,"\n\n",sep=""))
 ```
 
-# Lab session 3
+# Lab session 4
 ##
-
 \fontsize{48}{60}\sf\centering
-
-**Lab Session 3**
+**Lab Session 4**
 
 # Evaluating forecast accuracy
 
@@ -305,7 +302,7 @@ text(21,1,"Test data",col="red")
 -   A model which fits the training data well will not necessarily forecast well.
 -   A perfect fit can always be obtained by using a model with enough parameters.
 -   Over-fitting a model to data is just as bad as failing to identify a systematic pattern in the data.
-  * The test set must not be used for \emph{any} aspect of model development or calculation of forecasts.
+  * The test set must not be used for *any* aspect of model development or calculation of forecasts.
   * Forecast accuracy is based only on the test set.
 
 ## Forecast errors
@@ -321,7 +318,7 @@ where the training data is given by $\{y_1,\dots,y_T\}$
 
 ## Measures of forecast accuracy
 
-```{r googaccuracy, echo=FALSE, fig.height=4}
+```{r googaccuracy, echo=FALSE, fig.height=5}
 googtrain <- window(goog200,end=180)
 googfc1 <- meanf(googtrain,h=20)
 googfc2 <- rwf(googtrain,h=20)
@@ -393,10 +390,9 @@ works well. Then MASE is equivalent to MAE relative to a seasonal naïve method.
 
 \vspace*{10cm}
 
-
 ## Measures of forecast accuracy
 
-```{r googaccuracyagain, echo=FALSE, fig.height=4, dependson="googaccuracy"}
+```{r googaccuracyagain, echo=FALSE, fig.height=5, dependson="googaccuracy"}
 autoplot(tmp) + xlab("Day") + ylab("Price") +
   ggtitle("Forecasts for GOOG stock price") +
   scale_color_manual(values=c('#000000','#1b9e77','#d95f02','#7570b3'),
@@ -437,13 +433,12 @@ knitr::kable(tab, digits=2)
   4. If your model doesn't forecast well, you should make it more complicated.
   5. Always choose the model with the best forecast accuracy as measured on the test set.
 
-# Lab session 4
+# Lab session 5
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 4**
+**Lab Session 5**
 
 # Time series cross-validation
-
 
 ## Time series cross-validation
 
@@ -548,10 +543,10 @@ goog200 %>% rwf(drift=TRUE) %>% residuals -> res
 res^2 %>% mean(na.rm=TRUE) %>% sqrt
 ```
 
-# Lab session 5
+# Lab session 6
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 5**
+**Lab Session 6**
 
 # Prediction intervals
 

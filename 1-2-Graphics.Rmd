@@ -95,8 +95,6 @@ autoplot(ausgdp)
 elecsales
 ```
 
-# Time plots
-
 ## Time plots
 
 \small
@@ -117,9 +115,8 @@ autoplot(a10) + ylab("$ million") + xlab("Year") +
 # Lab session 1
 
 ##
-
 \fontsize{48}{60}\sf\centering
-\textbf{Lab Session 1}
+**Lab Session 1**
 
 # Seasonal plots
 
@@ -181,6 +178,11 @@ ggseasonplot(beer,year.labels=TRUE)
 ```{r}
 ggsubseriesplot(beer)
 ```
+
+# Lab session 2
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 2**
 
 # Seasonal or cyclic?
 
@@ -291,7 +293,6 @@ with these scatterplots.
      * $r_3=\text{Correlation}(y_{t}, y_{t-3})$
      * etc.
   * If there is **seasonality**, the ACF at the seasonal lag (e.g., 12 for monthly data) will be **large and positive**.
-
 
 ## Autocorrelation
 
@@ -420,10 +421,7 @@ autoplot(pigs2) +
 ggAcf(pigs2)
 ```
 
-# Lab session 2
-
+# Lab session 3
 ##
-
 \fontsize{48}{60}\sf\centering
-\textbf{Lab Session 2}
-
+**Lab Session 3**

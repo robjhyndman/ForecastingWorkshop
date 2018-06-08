@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
 ```
 
-#Backshift notation reviewed
+# Backshift notation reviewed
 
-##Backshift notation
+## Backshift notation
 
 A  very useful notational device is the backward  shift operator,  $B$,  which is used as follows:
 $$
@@ -34,7 +34,7 @@ $$\pause
 For  monthly  data, if we wish to shift attention  to  ``the same  month last year,''  then  $B^{12}$ is used,  and  the notation is  $B^{12}y_{t}$  =  $y_{t-12}$.
 
 
-##Backshift notation
+## Backshift notation
 
   * First difference: $1-B$.
   * Double difference:  $(1- B)^{2}$.
@@ -47,7 +47,7 @@ For  monthly  data, if we wish to shift attention  to  ``the same  month last ye
 &= y_t-y_{t-1}-y_{t-m}+y_{t-m-1}.
 \end{align*}
 
-##Backshift notation for ARIMA
+## Backshift notation for ARIMA
 \fontsize{13}{15}\sf
 
   * ARMA model:
@@ -77,7 +77,7 @@ $$
 $$
 
 
-##Backshift notation for ARIMA
+## Backshift notation for ARIMA
 \fontsize{13}{15}\sf
 
 
@@ -95,9 +95,9 @@ $$
 
 
 
-#Seasonal ARIMA models
+# Seasonal ARIMA models
 
-##Seasonal ARIMA models
+## Seasonal ARIMA models
 
 | ARIMA | $~\underbrace{(p, d, q)}$ | $\underbrace{(P, D, Q)_{m}}$ |
 | ----: | :-----------------------: | :--------------------------: |
@@ -110,7 +110,7 @@ where $m =$ number of observations per year.
 
 
 
-##Seasonal ARIMA models
+## Seasonal ARIMA models
 
 E.g., ARIMA$(1, 1, 1)(1, 1, 1)_{4}$  model (without constant)\pause
 $$(1 - \phi_{1}B)(1 - \Phi_{1}B^{4}) (1 - B) (1 - B^{4})y_{t} ~= ~
@@ -148,7 +148,7 @@ $$\pause
 
 
 
-##Seasonal ARIMA models
+## Seasonal ARIMA models
 
 E.g., ARIMA$(1, 1, 1)(1, 1, 1)_{4}$  model (without constant)
 $$(1 - \phi_{1}B)(1 - \Phi_{1}B^{4}) (1 - B) (1 - B^{4})y_{t} ~= ~
@@ -172,7 +172,7 @@ y_{t}  &= (1 + \phi_{1})y_{t - 1} - \phi_1y_{t-2} + (1 + \Phi_{1})y_{t - 4}\\
 
 
 
-##Common ARIMA models
+## Common ARIMA models
 
 In the US Census Bureau uses the following models most often:\vspace*{0.5cm}
 
@@ -189,7 +189,7 @@ ARIMA(2,1,2)(0,1,1)$_m$& with no transformation\\
 
 
 
-##Seasonal ARIMA models
+## Seasonal ARIMA models
 The seasonal part of an AR or MA model will be seen in the seasonal lags of
 the PACF and ACF.
 
@@ -204,27 +204,27 @@ the PACF and ACF.
   *  exponential decay in the seasonal lags of the ACF
   * a single significant spike at lag 12 in the PACF.
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=TRUE, fig.height=3.6}
 autoplot(euretail) +
   xlab("Year") + ylab("Retail index")
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=TRUE, fig.height=4}
 euretail %>% diff(lag=4) %>% ggtsdisplay()
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=TRUE, fig.height=3.8}
 euretail %>% diff(lag=4) %>% diff() %>%
   ggtsdisplay()
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
   * $d=1$ and $D=1$ seems necessary.
   * Significant spike at lag 1 in ACF suggests non-seasonal MA(1) component.
@@ -232,7 +232,7 @@ euretail %>% diff(lag=4) %>% diff() %>%
   * Initial candidate model: ARIMA(0,1,1)(0,1,1)$_4$.
   * We could also have started with ARIMA(1,1,0)(1,1,0)$_4$.
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=TRUE, fig.height=3.5}
 fit <- Arima(euretail, order=c(0,1,1),
@@ -240,13 +240,13 @@ fit <- Arima(euretail, order=c(0,1,1),
 checkresiduals(fit)
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=FALSE}
 checkresiduals(fit, plot=FALSE)
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
   * ACF and PACF of residuals show significant spikes at lag 2, and maybe lag 3.
   * AICc of ARIMA(0,1,2)(0,1,1)$_4$ model is 74.36.
@@ -260,7 +260,7 @@ checkresiduals(fit)
 ```
 
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 \fontsize{12}{15}\sf
 
@@ -269,34 +269,34 @@ checkresiduals(fit)
   seasonal=c(0,1,1)))
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 \fontsize{13}{15}\sf
 
 ```{r, echo=TRUE, fig.height=4}
 checkresiduals(fit)
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 \fontsize{13}{15}\sf
 
 ```{r, echo=FALSE}
 checkresiduals(fit, plot=FALSE)
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 
 ```{r, echo=TRUE, fig.height=4}
 autoplot(forecast(fit, h=12))
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 \fontsize{12}{14}\sf
 
 ```{r, echo=TRUE}
 auto.arima(euretail)
 ```
 
-##European quarterly retail trade
+## European quarterly retail trade
 \fontsize{12}{14}\sf
 
 ```{r euretailtryharder, echo=TRUE}
@@ -304,7 +304,7 @@ auto.arima(euretail, stepwise=FALSE, approximation=FALSE)
 ```
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
 
 ```{r h02}
@@ -314,13 +314,13 @@ tmp <- cbind("H02 sales (million scripts)" = h02,
 autoplot(tmp, facets=TRUE) + xlab("Year") + ylab("")
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 ```{r h02b}
 ggtsdisplay(diff(lh02,12), xlab="Year",
   main="Seasonally differenced H02 scripts")
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
   * Choose $D=1$ and $d=0$.
   * Spikes in PACF at lags 12 and 24 suggest seasonal AR(2) term.
@@ -328,7 +328,7 @@ ggtsdisplay(diff(lh02,12), xlab="Year",
   * Initial candidate model: ARIMA(3,0,0)(2,1,0)$_{12}$.
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
 
 | Model | AICc|
@@ -342,7 +342,7 @@ ggtsdisplay(diff(lh02,12), xlab="Year",
 | ARIMA(3,0,1)(1,1,1)$_{12}$ | $-484.25$ |
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{11}{14}\sf
 
 ```{r, echo=TRUE}
@@ -351,19 +351,19 @@ ggtsdisplay(diff(lh02,12), xlab="Year",
 ```
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
 ```{r h02res, echo=TRUE, fig.height=4}
 checkresiduals(fit)
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
 ```{r h02resb, echo=FALSE, fig.height=4}
 checkresiduals(fit, plot=FALSE)
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{10}{14}\sf
 
 ```{r h02tryharder, echo=TRUE, fig.height=3.6}
@@ -372,7 +372,7 @@ checkresiduals(fit, plot=FALSE)
 ```
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{13}{15}\sf
 
 ```{r, echo=TRUE, fig.height=4}
@@ -380,14 +380,14 @@ checkresiduals(fit)
 ```
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{13}{15}\sf
 
 ```{r, echo=FALSE}
 checkresiduals(fit, plot=FALSE)
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{11}{12}\sf
 
 Training data: July 1991 to June 2006
@@ -421,7 +421,7 @@ getrmse(h02,h=24,order=c(2,1,4),seasonal=c(0,1,1),lambda=0)
 getrmse(h02,h=24,order=c(2,1,5),seasonal=c(0,1,1),lambda=0)
 ```
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{12}{14}\sf
 
 ```{r, cache=TRUE}
@@ -461,7 +461,7 @@ knitr::kable(data.frame(Model=modelname,RMSE=rmse),
 ```
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 
   * Models with lowest AICc values tend to give slightly better results than the other models.
   * AICc comparisons must have the same orders of differencing. But RMSE test set comparisons can involve any models.
@@ -471,7 +471,7 @@ knitr::kable(data.frame(Model=modelname,RMSE=rmse),
 
 
 
-##Cortecosteroid drug sales
+## Cortecosteroid drug sales
 \fontsize{12}{14}\sf
 
 ```{r h02f, echo=TRUE, fig.height=3}
@@ -483,10 +483,10 @@ autoplot(forecast(fit)) +
 
 
 
-#ARIMA vs ETS
+# ARIMA vs ETS
 
 
-##ARIMA vs ETS
+## ARIMA vs ETS
 
 
   * Myth that ARIMA models are more general than exponential smoothing.
@@ -503,7 +503,7 @@ autoplot(forecast(fit)) +
 
 
 
-##Equivalences
+## Equivalences
 
 \fontsize{12}{14}\sf
 
@@ -521,7 +521,7 @@ autoplot(forecast(fit)) +
 
 
 
-#Lab session 12
+# Lab session 12
 ##
 
 \fontsize{48}{60}\sf\centering

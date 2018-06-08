@@ -1,7 +1,7 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "2.1&nbsp; State space models"
+date: "1.5&nbsp; State space models"
 fontsize: 14pt
 output:
   beamer_presentation:
@@ -16,38 +16,37 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, cache=TRUE, warning=FALSE, message=FALSE)
 library(fpp2)
+options(digits=4, width=55)
 ```
 
-
 # Innovations state space models
-##Methods V Models
+## Methods V Models
 
-###Exponential smoothing methods
+### Exponential smoothing methods
 
   * Algorithms that return point forecasts.
 
 \pause
 
-###Innovations state space models
+### Innovations state space models
 
   * Generate same point forecasts but can also generate forecast intervals.
   * A stochastic (or random) data generating process that can generate an entire forecast distribution.
   * Allow for "proper" model selection.
 
-##ETS models
+## ETS models
 
-   * Each model has an \textit{observation} equation and \textit{transition} equations, one for each state (level, trend, seasonal), i.e., state space models.
-   * Two models for each method: one with additive and one with multiplicative errors, i.e., in total \color{orange}{18 models}.
+   * Each model has an *observation* equation and *state* equations, one for each state (level, trend, seasonal), i.e., state space models.
+   * Two models for each method: one with additive and one with multiplicative errors, i.e., in total \alert{18 models}.
    * ETS(Error,Trend,Seasonal):
       * Error $=\{$A,M$\}$
       * Trend $=\{$N,A,A\damped$\}$
       * Seasonal $=\{$N,A,M$\}$.
 
+## Exponential smoothing methods
+\fontsize{11.5}{12}\sf
 
-##Exponential smoothing methods
-\fontsize{13}{15}\sf
-
-\begin{block}{}
+\begin{block}{}\fontsize{11.5}{12}\sf
 \begin{tabular}{ll|ccc}
 & &\multicolumn{3}{c}{\bf Seasonal Component} \\
 \multicolumn{2}{c|}{\bf Trend}& N & A & M\\
@@ -63,10 +62,10 @@ A\damped & (Additive damped) & A\damped,N & A\damped,A & A\damped,M
 
 \vspace*{10cm}
 
-##Exponential smoothing methods
-\fontsize{13}{15}\sf
+## Exponential smoothing methods
+\fontsize{11.5}{12}\sf
 
-\begin{block}{}
+\begin{block}{}\fontsize{11.5}{12}\sf
 \begin{tabular}{ll|ccc}
 & &\multicolumn{3}{c}{\bf Seasonal Component} \\
 \multicolumn{2}{c|}{\bf Trend}& N & A & M\\
@@ -81,14 +80,14 @@ A\damped & (Additive damped) & A\damped,N & A\damped,A & A\damped,M
 \end{block}
 
 \begin{tabular}{l@{}p{2.3cm}@{}c@{}l}
-\structure{General n\rlap{otation}}
-    &       & ~E T S~  & ~:\hspace*{0.3cm}\textbf{E}xponen\textbf{T}ial \textbf{S}moothing               \\ [-0.2cm]
+\alert{General n\rlap{otation}}
+    &       & ~E T S~  & ~:\hspace*{0.3cm}\textbf{E}xponen\textbf{T}ial \textbf{S}moothing               \\ [-0.1cm]
     & \hfill{$\nearrow$\hspace*{-0.1cm}}        & {$\uparrow$} & {\hspace*{-0.2cm}$\nwarrow$} \\
     & \hfill{\textbf{E}rror\hspace*{0.2cm}} & {\textbf{T}rend}      & {\hspace*{0.2cm}\textbf{S}easonal}
 \end{tabular}
 \pause\vspace*{-0.4cm}
 
-\structure{Examples:}\newline\footnotesize\vspace*{-0.5cm}
+\alert{Examples:}\newline\footnotesize\vspace*{-0.7cm}
 
 \begin{tabular}{ll}
 A,N,N: &Simple exponential smoothing with additive errors\\
@@ -98,96 +97,62 @@ M,A,M: &Multiplicative Holt-Winters' method with multiplicative errors
 \end{tabular}
 
 \pause
-\color{orange}{\bf There are 18 separate models in the ETS framework}
+\alert{\bf There are 18 separate models in the ETS framework}
 
+## A model for SES
 
-##A model for SES
-
-\begin{block}{Component form}\vspace*{-0.6cm}
+\begin{block}{Component form}\vspace*{-0.4cm}
 \begin{align*}
 \text{Forecast equation}&&\pred{y}{t+h}{t} &= \ell_{t}\\
 \text{Smoothing equation}&&\ell_{t} &= \alpha y_{t} + (1 - \alpha)\ell_{t-1}
 \end{align*}
-\end{block}\pause
+\end{block}\pause\vspace*{-0.2cm}
 Forecast error: $e_t = y_t - \pred{y}{t}{t-1} = y_t - \ell_{t-1}$.\pause
-\begin{block}{Error correction form}\vspace*{-0.6cm}
+\begin{block}{Error correction form}\vspace*{-0.4cm}
 \begin{align*}
 y_t &= \ell_{t-1} + e_t\\
 \ell_{t}
          &= \ell_{t-1}+\alpha( y_{t}-\ell_{t-1})\\
          &= \ell_{t-1}+\alpha e_{t}
 \end{align*}
-\end{block}\pause\vspace*{-0.2cm}
+\end{block}\pause\vspace*{-0.3cm}
 
-Specify probability distribution for $e_t$, we assume $e_t = \varepsilon_t\sim\text{NID}(0,\sigma^2)$.
+Assume $e_t = \varepsilon_t\sim\text{NID}(0,\sigma^2)$.
 
-##ETS(A,N,N)
+## ETS(A,N,N)
 
-\begin{block}{}\vspace*{-0.6cm}
+\begin{block}{SES with additive errors}\vspace*{-0.4cm}
 \begin{align*}
-\text{Measurement equation}&& y_t &= \ell_{t-1} + \varepsilon_t\\
+\text{Observation equation}&& y_t &= \ell_{t-1} + \varepsilon_t\\
 \text{State equation}&& \ell_t&=\ell_{t-1}+\alpha \varepsilon_t
 \end{align*}
 \end{block}
 where $\varepsilon_t\sim\text{NID}(0,\sigma^2)$.
 
   * "innovations" or "single source of error" because same error process, $\varepsilon_t$.
-  * Measurement equation: relationship between observations and states.
-  * Transition equation(s): evolution of the state(s) through time.
+  * Observation equation: relationship between observations and states.
+  * State equation(s): evolution of the state(s) through time.
 
-##ETS(M,N,N)
+## ETS(A,A,N)
 
-SES with multiplicative errors.
-
-  * Specify relative errors  $\varepsilon_t=\frac{y_t-\pred{y}{t}{t-1}}{\pred{y}{t}{t-1}}\sim \text{NID}(0,\sigma^2)$
-  * Substituting $\pred{y}{t}{t-1}=\ell_{t-1}$ gives:
-    * $y_t = \ell_{t-1}+\ell_{t-1}\varepsilon_t$
-    * $e_t = y_t - \pred{y}{t}{t-1} = \ell_{t-1}\varepsilon_t$
-
- \pause
-\begin{block}{}\vspace*{-0.6cm}
-\begin{align*}
-\text{Measurement equation}&& y_t &= \ell_{t-1}(1 + \varepsilon_t)\\
-\text{State equation}&& \ell_t&=\ell_{t-1}(1+\alpha \varepsilon_t)
-\end{align*}
-\end{block}
-\pause
-
-  * Models with additive and multiplicative errors with the same parameters generate the same point forecasts but different prediction intervals.
-
-##ETS(A,A,N)
-
-Holt's linear method with additive errors.
-
-  * Assume $\varepsilon_t=y_t-\ell_{t-1}-b_{t-1} \sim \text{NID}(0,\sigma^2)$.
-  * Substituting into the error correction equations for Holt's linear method\vspace*{-0.8cm}
+  * Set $\varepsilon_t=y_t-\ell_{t-1}-b_{t-1} \sim \text{NID}(0,\sigma^2)$.
+  * Substituting into the error correction equations for Holt's linear method
+  
+  \begin{block}{Holt's linear method with additive errors}\vspace*{-0.3cm}
   \begin{align*}
       y_t&=\ell_{t-1}+b_{t-1}+\varepsilon_t\\
       \ell_t&=\ell_{t-1}+b_{t-1}+\alpha \varepsilon_t\\
       b_t&=b_{t-1}+\alpha\beta^* \varepsilon_t
   \end{align*}
+  \end{block}
+  
   * For simplicity, set $\beta=\alpha \beta^*$.
 
-##ETS(M,A,N)
+## ETS(A,A,A)
 
-Holt's linear method with multiplicative errors.
-
-  * Assume $\varepsilon_t=\frac{y_t-(\ell_{t-1}+b_{t-1})}{(\ell_{t-1}+b_{t-1})}$
-  * Following a similar approach as above, the innovations state space model underlying Holt's linear method with multiplicative errors is specified as\vspace*{-0.8cm}
-  \begin{align*}
-      y_t&=(\ell_{t-1}+b_{t-1})(1+\varepsilon_t)\\
-      \ell_t&=(\ell_{t-1}+b_{t-1})(1+\alpha \varepsilon_t)\\
-      b_t&=b_{t-1}+\beta(\ell_{t-1}+b_{t-1}) \varepsilon_t
-  \end{align*}
-  where again  $\beta=\alpha \beta^*$ and $\varepsilon_t \sim \text{NID}(0,\sigma^2)$.
-
-##ETS(A,A,A)
-
-Holt-Winters additive method with additive errors.
-
-\begin{block}{}\vspace*{-0.6cm}
+\begin{block}{Holt-Winters additive method with additive errors}\vspace*{-0.4cm}
 \begin{align*}
-\text{Forecast equation} && \hat{y}_{t+h|t} &= \ell_{t} + hb_{t} + s_{t-m+h_m^+}\\
+\text{Forecast equation} && \hat{y}_{t+h|t} &= \ell_{t} + hb_{t} + s_{t+h-m(k+1)}\\
 \text{Observation equation}&& y_t&=\ell_{t-1}+b_{t-1}+s_{t-m} + \varepsilon_t\\
 \text{State equations}&& \ell_t&=\ell_{t-1}+b_{t-1}+\alpha \varepsilon_t\\
 &&        b_t&=b_{t-1}+\beta \varepsilon_t \\
@@ -195,85 +160,57 @@ Holt-Winters additive method with additive errors.
 \end{align*}
 \end{block}
 
-* Forecast errors: $\varepsilon_{t} = y_t - \hat{y}_{t|t-1}$
-* $h_m^+ = \lfloor (h-1) \mod m\rfloor + 1$.
+* $k$ is integer part of $(h-1)/m$.
 
+## ETS(M,N,N)
+\vspace*{-0.2cm}
+SES with multiplicative errors:\vspace*{-0.2cm}
 
-##Additive error models
+  * Specify relative errors  $\varepsilon_t=\frac{y_t-\pred{y}{t}{t-1}}{\pred{y}{t}{t-1}}\sim \text{NID}(0,\sigma^2)$
 
-\placefig{0}{1.2}{width=12.8cm,trim=0 120 0 0,clip=true}{fig_7_ets_add.pdf}
+\pause
+\begin{block}{SES with multiplicative errors}\vspace*{-0.3cm}
+\begin{align*}
+\text{Observation equation}&& y_t &= \ell_{t-1}(1 + \varepsilon_t)\\
+\text{State equation}&& \ell_t&=\ell_{t-1}(1+\alpha \varepsilon_t)
+\end{align*}
+\end{block}
+\pause\vspace*{-0.3cm}
 
+  * Models with additive and multiplicative errors with the same parameters generate the same point forecasts but different prediction intervals.
 
-##Multiplicative error models
+## ETS(M,A,N)
 
-\placefig{0}{1.2}{width=12.8cm,trim=0 120 0 0,clip=true}{fig_7_ets_multi.pdf}
+\begin{block}{Holt's linear method with multiplicative errors}\vspace*{-0.3cm}
+  \begin{align*}
+      y_t&=(\ell_{t-1}+b_{t-1})(1+\varepsilon_t)\\
+      \ell_t&=(\ell_{t-1}+b_{t-1})(1+\alpha \varepsilon_t)\\
+      b_t&=b_{t-1}+\beta(\ell_{t-1}+b_{t-1}) \varepsilon_t
+  \end{align*}
+\end{block}
 
+  *  $\varepsilon_t=\frac{y_t-(\ell_{t-1}+b_{t-1})}{(\ell_{t-1}+b_{t-1})}$
 
-##Estimating ETS models
+  *  $\beta=\alpha \beta^*$ and $\varepsilon_t \sim \text{NID}(0,\sigma^2)$.
+
+## Additive error models
+
+\placefig{0}{1.6}{width=12.8cm,trim=0 120 0 0,clip=true}{fig_7_ets_add.pdf}
+
+## Multiplicative error models
+
+\placefig{0}{1.6}{width=12.8cm,trim=0 120 0 0,clip=true}{fig_7_ets_multi.pdf}
+
+## Estimating ETS models
 
   * Smoothing parameters $\alpha$, $\beta$, $\gamma$ and $\phi$, and the initial states $\ell_0$, $b_0$, $s_0,s_{-1},\dots,s_{-m+1}$ are estimated by maximising the "likelihood" = the probability of the data arising from the specified model.
   * For models with additive errors equivalent to minimising SSE.
   * For models with multiplicative errors, \textbf{not} equivalent to minimising SSE.
   * We will estimate models with the \Verb|ets()| function in the forecast package.
 
-##Innovations state space models
-
-Let $\bm{x}_t = (\ell_t, b_t, s_t, s_{t-1}, \dots, s_{t-m+1})$ and
-$\varepsilon_t\stackrel{\mbox{\scriptsize iid}}{\sim
-\mbox{N}(0,\sigma^2)}$.
-\begin{block}{}
-\begin{tabular}{lcl}
-$y_t$ &=& $\underbrace{h(\bm{x}_{t-1})} +
-\underbrace{k(\bm{x}_{t-1})\varepsilon_t}$\\
-&& \hspace*{0.5cm}$\mu_t$ \hspace*{1.45cm} $e_t$ \\[0.2cm]
-$\bm{x}_t$ &=& $f(\bm{x}_{t-1}) +
-g(\bm{x}_{t-1})\varepsilon_t$\\
-\end{tabular}
-\end{block}
-
-
-Additive errors
-: \mbox{}\newline
-  $k(x)=1$.\qquad $y_t = \mu_{t} + \varepsilon_t$.
-
-Multiplicative errors
-: \mbox{}\newline
-  $k(\bm{x}_{t-1}) = \mu_{t}$.\qquad $y_t = \mu_{t}(1 + \varepsilon_t)$.\newline
-  $\varepsilon_t = (y_t - \mu_t)/\mu_t$ is relative error.
-
-##Innovations state space models
-
-\structure{Estimation}\vspace*{0.5cm}
-
-\begin{block}{}
-\begin{align*}
-L^*(\bm\theta,\bm{x}_0) &= n\log\!\bigg(\sum_{t=1}^n \varepsilon^2_t/k^2(\bm{x}_{t-1})\!\bigg) + 2\sum_{t=1}^n \log|k(\bm{x}_{t-1})|\\
-&= -2\log(\text{Likelihood}) + \mbox{constant}
-\end{align*}
-\end{block}
-
-* Estimate parameters $\bm\theta = (\alpha,\beta,\gamma,\phi)$ and
-initial states $\bm{x}_0 = (\ell_0,b_0,s_0,s_{-1},\dots,s_{-m+1})$ by
-minimizing $L^*$.
-
-##Parameter restrictions
+## Model selection
 \fontsize{13}{15}\sf
 
-\structure{\textit{Usual} region}
-
-  * Traditional restrictions in the methods $0< \alpha,\beta^*,\gamma^*,\phi<1$\newline (equations interpreted as weighted averages).
-  * In models we set $\beta=\alpha\beta^*$ and $\gamma=(1-\alpha)\gamma^*$.
-  * Therefore $0< \alpha <1$, &nbsp;&nbsp; $0 < \beta < \alpha$ &nbsp;&nbsp; and $0< \gamma < 1-\alpha$.
-  * $0.8<\phi<0.98$ --- to prevent numerical difficulties.
- \pause
-
-\structure{\textit{Admissible} region}
-
-  * To prevent observations in the distant past having a continuing effect on current forecasts.
-  * Usually (but not always) less restrictive than the \textit{usual} region.
-  * For example for ETS(A,N,N): \newline \textit{usual} $0< \alpha <1$ --- \textit{admissible} is $0< \alpha <2$.
-
-##Model selection
 \begin{block}{Akaike's Information Criterion}
 \[
 \text{AIC} = -2\log(\text{L}) + 2k
@@ -285,7 +222,7 @@ where $L$ is the likelihood and $k$ is the number of parameters initial states e
 \[
 \text{AIC}_{\text{c}} = \text{AIC} + \frac{2(k+1)(k+2)}{T-k}
 \]
-\end{block}
+\end{block}\vspace*{-0.3cm}
 which is the AIC corrected (for small sample bias).
 \pause
 \begin{block}{Bayesian Information Criterion}
@@ -294,30 +231,26 @@ which is the AIC corrected (for small sample bias).
 \]
 \end{block}
 
-
-##Automatic forecasting
+## Automatic forecasting
 
 **From Hyndman et al.\ (IJF, 2002):**
 
 * Apply each model that is appropriate to the data.
 Optimize parameters and initial values using MLE (or some other
 criterion).
-* Select best method using AICc:
+* Select best method using AICc.
 * Produce forecasts using best method.
-* Obtain Forecast intervals using underlying state space model.
+* Obtain prediction intervals using underlying state space model.
 
 Method performed very well in M3 competition.
 
+## Some unstable models
 
-##Some unstable models
-
-* Some of the combinations of (Error, Trend, Seasonal) can lead to numerical difficulties; see equations with division by a state.
-* These are: ETS(A,N,M), ETS(A,A,M), ETS(A,A\damped,M).
 * Models with multiplicative errors are useful for strictly positive data, but are not numerically stable with data containing zeros or negative values. In that case only the six fully additive models will be applied.
+* Some of the combinations of (Error, Trend, Seasonal) can lead to numerical difficulties.
 
-
-##Exponential smoothing models
-\fontsize{12}{14}\sf
+## Exponential smoothing models
+\fontsize{11}{12}\sf
 
 \begin{block}{}
 \begin{tabular}{ll|ccc}
@@ -347,43 +280,51 @@ Method performed very well in M3 competition.
 \end{tabular}
 \end{block}
 
+## Prediction intervals
 
+\alert{Prediction intervals:} cannot be generated using the methods, only the models.
 
-##Forecasting with ETS models
-
-\structure{Point forecasts:} iterate the equations for $t=T+1,T+2,\dots,T+h$ and set all $\varepsilon_t=0$ for $t>T$.\newline\pause
-
-* Not the same as $\text{E}(y_{t+h} | \bm{x}_t)$ unless trend and seasonality are both additive.
-* Point forecasts for ETS(A,x,y) are identical to ETS(M,x,y) if the parameters are the same.
-
-##Forecasting with ETS models
-
-\structure{Prediction intervals:} cannot be generated using the methods.
-
-  * The prediction intervals will differ between models with additive and multiplicative methods.
+  * The prediction intervals will differ between models with additive and multiplicative errors.
   * Exact formulae for some models.
   * More general to simulate future sample paths, conditional on the last estimate of the states, and to obtain prediction intervals from the percentiles of these simulated future paths.
-  * Options are available in R using the `forecast` function in the forecast package.
+
+## Prediction intervals
+\fontsize{12}{13}\sf\vspace*{-0.2cm}
+
+PI for most ETS models: $\hat{y}_{T+h|T} \pm c \sigma_h$, where $c$ depends on coverage probability and $\sigma_h$ is forecast standard deviation.
+
+\fontsize{10}{12}\sf\vspace*{0.2cm}
+
+\hspace*{-0.8cm}\begin{tabular}{ll}
+\hline
+(A,N,N) & $\sigma_h = \sigma^2\big[1 + \alpha^2(h-1)\big]$\\
+(A,A,N) & $\sigma_h = \sigma^2\Big[1 + (h-1)\big\{\alpha^2 + \alpha\beta h + \frac16\beta^2h(2h-1)\big\}\Big]$\\
+(A,A$_d$,N) & $\sigma_h = \sigma^2\biggl[1 + \alpha^2(h-1) + \frac{\beta\phi h}{(1-\phi)^2} \left\{2\alpha(1-\phi) +\beta\phi\right\}$\\
+      & \hspace*{1.5cm}$\mbox{} - \frac{\beta\phi(1-\phi^h)}{(1-\phi)^2(1-\phi^2)} \left\{ 2\alpha(1-\phi^2)+ \beta\phi(1+2\phi-\phi^h)\right\}\biggr]$\\
+(A,N,A) &              $\sigma_h = \sigma^2\Big[1 + \alpha^2(h-1) + \gamma k(2\alpha+\gamma)\Big]$\\
+(A,A,A) &              $\sigma_h = \sigma^2\Big[1 + (h-1)\big\{\alpha^2 + \alpha\beta h + \frac16\beta^2h(2h-1)\big\} + \gamma k \big\{2\alpha+ \gamma + \beta m (k+1)\big\} \Big]$\\
+(A,A$_d$,A) &  $\sigma_h = \sigma^2\biggl[1 + \alpha^2(h-1) +\frac{\beta\phi h}{(1-\phi)^2} \left\{2\alpha(1-\phi)  + \beta\phi \right\}$\\
+  & \hspace*{1.5cm}$\mbox{} - \frac{\beta\phi(1-\phi^h)}{(1-\phi)^2(1-\phi^2)} \left\{ 2\alpha(1-\phi^2)+ \beta\phi(1+2\phi-\phi^h)\right\}$ \\
+  & \hspace*{1.5cm}$\mbox{} + \gamma k(2\alpha+\gamma)  + \frac{2\beta\gamma\phi}{(1-\phi)(1-\phi^m)}\left\{k(1-\phi^m) - \phi^m(1-\phi^{mk})\right\}\biggr]$
+\end{tabular}
 
 # ETS in R
 
-
-##Example: drug sales
-\fontsize{8}{9}\sf
+## Example: drug sales
+\fontsize{9}{8}\sf
 
 ```{r, echo=TRUE}
 ets(h02)
 ```
 
-
-##Example: drug sales
-\fontsize{8}{9}\sf
+## Example: drug sales
+\fontsize{9}{8}\sf
 
 ```{r, echo=TRUE}
 ets(h02, model="AAA", damped=FALSE)
 ```
 
-##The `ets()` function
+## The `ets()` function
 
 * Automatically chooses a model by default using the AIC, AICc or BIC.
 * Can handle any combination of trend, seasonality and damping
@@ -396,29 +337,28 @@ ets(h02, model="AAA", damped=FALSE)
 * **Methods:** `coef()`, `autoplot()`, `plot()`, `summary()`, `residuals()`, `fitted()`, `simulate()` and `forecast()`
 * `autoplot()` and `plot()` functions show time plots of the original time series along with the extracted components (level, growth and seasonal).
 
-##Example: drug sales
+## Example: drug sales
 ```{r, echo=TRUE, fig.height=4}
-h02 %>% ets %>% autoplot
+h02 %>% ets() %>% autoplot()
 ```
 
-##Example: drug sales
+## Example: drug sales
 
 ```{r, echo=TRUE, fig.height=4}
-h02 %>% ets %>% forecast %>% autoplot
+h02 %>% ets() %>% forecast() %>% autoplot()
 ```
 
-
-##Example: drug sales
-\fontsize{9}{12}\sf
+## Example: drug sales
+\fontsize{11}{12}\sf
 
 ```{r, echo=TRUE}
-h02 %>% ets %>% accuracy
+h02 %>% ets() %>% accuracy()
 
-h02 %>% ets(model="AAA", damped=FALSE) %>% accuracy
+h02 %>% ets(model="AAA", damped=FALSE) %>% accuracy()
 ```
 
-##The `ets()` function
-\fontsize{9}{10}\sf
+## The `ets()` function
+\fontsize{10}{9.5}\sf
 
 `ets()` function also allows refitting model to new data set.
 
@@ -431,8 +371,8 @@ accuracy(fit2)
 accuracy(forecast(fit1,10), test)
 ```
 
-##The `ets()` function in R
-
+## The `ets()` function in R
+\fontsize{11.5}{14}\sf
 
 ```r
 ets(y, model = "ZZZ", damped = NULL,
@@ -448,44 +388,29 @@ ets(y, model = "ZZZ", damped = NULL,
   allow.multiplicative.trend = FALSE, ...)
 ```
 
-##The `ets()` function in R
-\fontsize{13}{15}\sf
+## The `ets()` function in R
+\fontsize{13}{14}\sf\vspace*{-0.2cm}
 
 * `y` \newline The time series to be forecast.
 * `model` \newline use the ETS classification and notation: "N" for none, "A" for additive, "M" for multiplicative, or "Z" for automatic selection. Default `ZZZ` all components are selected using the information criterion.
 * `damped`
   * If `damped=TRUE`, then a damped trend will be used (either A\damped\ or M\damped).
   * `damped=FALSE`, then a non-damped trend will used.
-  * If `damped=NULL` (the default), then either a damped or a non-damped trend will be selected according to the information criterion chosen.
+  * If `damped=NULL` (default), then either a damped or a non-damped trend will be selected according to the information criterion chosen.
 
-
-##The `ets()` function in R
-\fontsize{13}{14.5}\sf\vspace*{-0.2cm}
+## The `ets()` function in R
+\fontsize{12.5}{14}\sf\vspace*{-0.2cm}
 
   * `additive.only`\newline
       Only models with additive components will be considered if \Verb"additive.only=TRUE". Otherwise all models will be considered.
   * `lambda`\newline
-      Box-Cox transformation parameter. It will be ignored if `lambda=NULL` (the default value). Otherwise, the time series will be transformed before the model is estimated. When `lambda` is not `NULL`, `additive.only` is set to `TRUE`.
+      Box-Cox transformation parameter. Ignored if `lambda=NULL` (default). Otherwise, the time series will be transformed before the model is estimated. When `lambda` is not `NULL`, `additive.only` is set to `TRUE`.
   * `biadadj`\newline
       Uses bias-adjustment when undoing Box-Cox transformation for fitted values.
+  * `allow.multiplicative.trend` allows models with a multiplicative trend.
 
-##The `ets()` function in R
-\fontsize{13}{15}\sf
-
-* `lower,upper` bounds for the parameter estimates of $\alpha$, $\beta^*$, $\gamma^*$ and $\phi$.
-* `opt.crit=lik` (default) optimisation criterion used for estimation.
-* `bounds` Constraints on the parameters.
-
-    * \textit{usual} region -- `"bounds=usual"`;
-    * \textit{admissible} region -- `"bounds=admissible"`;
-    * `"bounds=both"` (the default) requires the parameters to satisfy both sets of constraints.
-
-* `ic=aicc` (the default) information criterion to be used in selecting models.
-* `restrict=TRUE` (the default) models that cause numerical difficulties are not considered in model selection.
-* `allow.multiplicative.trend` allows models with a multiplicative trend.
-
-##The `forecast()` function in R
-\fontsize{13}{14.5}\sf
+## The `forecast()` function in R
+\fontsize{12}{14}\sf
 
 ```r
   forecast(object,
@@ -502,7 +427,7 @@ ets(y, model = "ZZZ", damped = NULL,
 * `fan`: if `fan=TRUE`, suitable for fan plots.
 * `simulate`: If `TRUE`, prediction intervals generated via simulation rather than analytic formulae. Even if `FALSE` simulation will be used if no algebraic formulae exist.
 
-##The `forecast()` function in R
+## The `forecast()` function in R
 \fontsize{13}{15}\sf
 
 * `bootstrap`: If `bootstrap=TRUE` and \Verb"simulate=TRUE", then simulated prediction intervals use re-sampled errors rather than normally distributed errors.
@@ -511,12 +436,13 @@ ets(y, model = "ZZZ", damped = NULL,
 * `lambda`: The Box-Cox transformation parameter. Ignored if `lambda=NULL`. Otherwise, forecasts are back-transformed via inverse Box-Cox transformation.
 * `biasadj`: Apply bias adjustment after Box-Cox?
 
-
-#Lab session 8
+# Lab session 9
 ##
-
 \fontsize{48}{60}\sf\centering
-\textbf{Lab Session 8}
+**Lab Session 9**
 
-
+# Lab session 10
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 10**
 
