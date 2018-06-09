@@ -14,10 +14,14 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache=TRUE,
+  warning=FALSE,
+  message=FALSE)
 library(fpp2)
 source("nicefigs.R")
-options(width=50)
+options(digits=4, width=55)
 ```
 
 # Time series in R

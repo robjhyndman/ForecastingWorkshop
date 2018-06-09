@@ -14,9 +14,13 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache=TRUE,
+  warning=FALSE,
+  message=FALSE)
 library(fpp2)
-options(digits=3, width=55)
+options(digits=4, width=55)
 ```
 
 # Regression with ARIMA errors

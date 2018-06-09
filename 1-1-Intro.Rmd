@@ -14,8 +14,13 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, cache=TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  cache=TRUE,
+  warning=FALSE,
+  message=FALSE)
 library(fpp2)
+options(digits=4, width=55)
 ```
 
 # Background
@@ -233,25 +238,17 @@ The \alert{Pharmaceutical Benefits Scheme} (PBS) is the Australian government dr
 
 ## CASE STUDY 3: Airline
 
-```{r}
+```{r, echo=FALSE}
 autoplot(melsyd[,"Economy.Class"],
   main="Economy class passengers: Melbourne-Sydney",
   xlab="Year",ylab="Thousands")
 ```
 
-## CASE STUDY 3: Airline
-
-```{r}
-autoplot(melsyd[,"Economy.Class"],
-  main="Economy class passengers: Melbourne-Sydney",
-  xlab="Year",ylab="Thousands")
-```
-
-\begin{textblock}{4.2}(7,6)
+\only<2>{\begin{textblock}{4.2}(7,6)
 \begin{alertblock}{}
 Not the real data! Or is it?
 \end{alertblock}
-\end{textblock}
+\end{textblock}}
 
 ## CASE STUDY 3: Airline
 
