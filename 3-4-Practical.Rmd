@@ -27,8 +27,6 @@ options(digits=4, width=55)
 
 ## Models for different frequencies
 
-\vspace*{-0.2cm}
-
 ### Models for annual data
 
  * ETS, ARIMA, Dynamic regression
@@ -60,13 +58,69 @@ options(digits=4, width=55)
 ## Positive forecasts
 \fontsize{12}{12}\sf
 
-```{r}
+```{r, fig.height=3.8}
 eggs %>%
   ets(model="AAN", damped=FALSE, lambda=0) %>%
   forecast(h=50, biasadj=TRUE) %>%
   autoplot()
 ```
 
+## Forecasts constrained to an interval
+
+Suppose egg prices constrained to lie within $a=50$ and $b=400$.
+
+Transform data using scaled logit transform:
+$$
+y = \log\left(\frac{x-a}{b-x}\right),
+$$
+where $x$ is on the original scale and $y$ is the transformed data. To reverse the transformation, we will use
+$$
+x  = \frac{(b-a)e^y}{1+e^y} + a.
+$$
+
+## Forecasts constrained to an interval
+\fontsize{12}{12}\sf
+
+```r
+    # Bounds
+    a <- 50
+    b <- 400
+    # Transform data and fit model
+    fit <- log((eggs-a)/(b-eggs)) %>%
+      ets(model="AAN", damped=FALSE)
+    fc <- forecast(fit, h=50)
+    # Back-transform forecasts
+    fc[["mean"]] <- (b-a)*exp(fc[["mean"]]) /
+      (1+exp(fc[["mean"]])) + a
+    fc[["lower"]] <- (b-a)*exp(fc[["lower"]]) /
+     (1+exp(fc[["lower"]])) + a
+    fc[["upper"]] <- (b-a)*exp(fc[["upper"]]) /
+     (1+exp(fc[["upper"]])) + a
+    fc[["x"]] <- eggs
+    autoplot(fc)
+```
+
+## Forecasts constrained to an interval
+
+```{r constrained, echo=FALSE}
+    # Bounds
+    a <- 50
+    b <- 400
+    # Transform data and fit model
+    fit <- log((eggs-a)/(b-eggs)) %>%
+      ets(model="AAN", damped=FALSE)
+    fc <- forecast(fit, h=50)
+    # Back-transform forecasts
+    fc[["mean"]] <- (b-a)*exp(fc[["mean"]]) /
+      (1+exp(fc[["mean"]])) + a
+    fc[["lower"]] <- (b-a)*exp(fc[["lower"]]) /
+     (1+exp(fc[["lower"]])) + a
+    fc[["upper"]] <- (b-a)*exp(fc[["upper"]]) /
+     (1+exp(fc[["upper"]])) + a
+    fc[["x"]] <- eggs
+    # Plot result on original scale
+    autoplot(fc)
+```
 
 # Forecast combinations
 
@@ -139,10 +193,88 @@ c(ETS = accuracy(ETS, auscafe)["Test set","RMSE"],
     accuracy(Combination, auscafe)["Test set","RMSE"])
 ```
 
+# Prediction intervals for aggregates
+## Prediction intervals for aggregates
+\fontsize{11}{11}\sf
+
+```{r aggregates}
+# First fit a model to the data
+fit <- ets(gas/1000)
+# Forecast six months ahead
+fc <- forecast(fit, h=6)
+sum(fc[["mean"]][1:6])
+# Simulate 10000 future sample paths
+nsim <- 10000
+h <- 6
+sim <- numeric(nsim)
+for(i in seq_len(nsim))
+  sim[i] <- sum(simulate(fit, future=TRUE, nsim=h))
+mean(sim)
+```
+
+## Prediction intervals for aggregates
+
+```{r aggregates3, dependson="aggregates"}
+#80% interval:
+quantile(sim, prob=c(0.1, 0.9))
+#95% interval:
+quantile(sim, prob=c(0.025, 0.975))
+```
+
+
+# Backcasting
+## Backcasting
+\fontsize{11}{11}\sf
+
+```{r backcasting_functions}
+# Function to reverse time
+reverse_ts <- function(y)
+{
+  ts(rev(y), start=tsp(y)[1L], frequency=frequency(y))
+}
+# Function to reverse a forecast
+reverse_forecast <- function(object)
+{
+  h <- length(object[["mean"]])
+  f <- frequency(object[["mean"]])
+  object[["x"]] <- reverse_ts(object[["x"]])
+  object[["mean"]] <- ts(rev(object[["mean"]]),
+    end=tsp(object[["x"]])[1L]-1/f, frequency=f)
+  object[["lower"]] <- object[["lower"]][h:1L,]
+  object[["upper"]] <- object[["upper"]][h:1L,]
+  return(object)
+}
+```
+
+
+## Backcasting
+
+\fontsize{11}{11}\sf
+
+```r
+euretail %>% reverse_ts() %>%
+  auto.arima() %>%
+  forecast() %>% reverse_forecast() -> bc
+autoplot(bc) +
+  ggtitle(paste("Backcasts from",bc[["method"]]))
+```
+
+
+```{r backcasting, dependson="backcasting_functions", echo=FALSE, fig.height=3.5}
+# Backcast example
+euretail %>%
+  reverse_ts() %>%
+  auto.arima() %>%
+  forecast() %>%
+  reverse_forecast() -> bc
+autoplot(bc) +
+  ggtitle(paste("Backcasts from",bc[["method"]]))
+```
+
 # Missing values
 
 ## Missing values
-\fontsize{14}{15}\sf
+\fontsize{13}{14}\sf
 
 **Functions which can handle missing values**
 

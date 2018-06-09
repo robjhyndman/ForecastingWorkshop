@@ -35,9 +35,8 @@ autoplot(gasoline) +
 ```
 
 ## Examples
-\fontsize{11}{11}\sf
 
-```{r callsdata, message=FALSE, warning=FALSE, echo=FALSE}
+```{r callsdata, message=FALSE, warning=FALSE, echo=FALSE,fig.height=5}
 p1 <- autoplot(calls) +
   ylab("Call volume") + xlab("Weeks") +
   scale_x_continuous(breaks=seq(1,33,by=2)) +
@@ -62,22 +61,32 @@ autoplot(telec) +
 # STL with multiple seasonal periods
 
 ## STL with multiple seasonal periods
+\fontsize{11}{11}\sf
 
-```{r callsmstl, fig.cap="Multiple STL for the call volume data.", fig.asp=.95, fig.height=6}
-calls %>% mstl() %>%
-  autoplot() + xlab("Week")
+```{r callsmstl, fig.height=4.6}
+calls %>% mstl() %>% autoplot() + xlab("Week")
 ```
 
 ## STL with multiple seasonal periods
+\fontsize{11}{11}\sf
 
-```{r callsmstlf, fig.cap="Multiple STL for the call volume data.", fig.asp=0.55}
-calls %>%  stlf() %>%
-  autoplot() + xlab("Week")
+```{r callsmstlf}
+calls %>%  stlf() %>% autoplot() + xlab("Week")
 ```
 
-### Dynamic harmonic regression with multiple seasonal periods {-}
+## STL with multiple seasonal periods
+\fontsize{11}{11}\sf
 
-```{r callsharmonics, echo=TRUE, fig.cap="Forecasts from a dynamic harmonic regression applied to the call volume data.",fig.asp=0.55}
+```{r callsmstlf2}
+calls %>%  stlf() %>% autoplot(include=5*169) + xlab("Week")
+```
+
+# Dynamic harmonic regression
+
+## Dynamic harmonic regression
+\fontsize{11}{11}\sf
+
+```{r callsharmonics, echo=TRUE, fig.asp=0.45}
 fit <- auto.arima(calls, seasonal=FALSE, lambda=0,
          xreg=fourier(calls, K=c(10,10)))
 fit %>%
