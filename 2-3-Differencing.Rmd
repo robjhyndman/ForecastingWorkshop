@@ -39,51 +39,51 @@ A \textbf{stationary series} is:
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(dj) + ylab("Dow Jones Index") + xlab("Day")
 ```
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(diff(dj)) + ylab("Change in Dow Jones Index") + xlab("Day")
 ```
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(strikes) + ylab("Number of strikes") + xlab("Year")
 ```
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(hsales) + xlab("Year") + ylab("Total sales") +
   ggtitle("Sales of new one-family houses, USA")
 ```
 
 ## Stationary?
-```{r}
+```{r, echo=FALSE}
 autoplot(eggs) + xlab("Year") + ylab("$") +
   ggtitle("Price of a dozen eggs in 1993 dollars")
 ```
 
 ## Stationary?
-```{r}
+```{r, echo=FALSE}
 autoplot(window(pigs/1e3, start=1990)) + xlab("Year") + ylab("thousands") +
   ggtitle("Number of pigs slaughtered in Victoria")
 ```
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(lynx) + xlab("Year") + ylab("Number trapped") +
   ggtitle("Annual Canadian Lynx Trappings")
 ```
 
 ## Stationary?
 
-```{r}
+```{r, echo=FALSE}
 autoplot(window(ausbeer, start=1992)) + xlab("Year") + ylab("megalitres") +
   ggtitle("Australian quarterly beer production")
 ```
@@ -109,24 +109,29 @@ For ARIMA modelling, we also need to \textbf{stabilize the mean}.
      large and positive.
 
 ## Example: Dow-Jones index
+\fontsize{11}{11}\sf
 
 ```{r}
 autoplot(dj) + ylab("Dow Jones Index") + xlab("Day")
 ```
 
 ## Example: Dow-Jones index
+\fontsize{11}{11}\sf
 
 ```{r}
 ggAcf(dj)
 ```
 
 ## Example: Dow-Jones index
+\fontsize{11}{11}\sf
 
 ```{r}
-autoplot(diff(dj)) + ylab("Change in Dow Jones Index") + xlab("Day")
+autoplot(diff(dj)) +
+  ylab("Change in Dow Jones Index") + xlab("Day")
 ```
 
 ## Example: Dow-Jones index
+\fontsize{11}{11}\sf
 
 ```{r}
 ggAcf(diff(dj))

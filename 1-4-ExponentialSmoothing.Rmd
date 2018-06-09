@@ -262,7 +262,7 @@ fc1 <- hw(aust,seasonal="additive")
 fc2 <- hw(aust,seasonal="multiplicative")
 ```
 
-```{r, fig.height=3.2}
+```{r, fig.height=3.2, echo=FALSE}
 tmp <- cbind(Data=aust,
   "HW additive forecasts" = fc1[["mean"]],
   "HW multiplicative forecasts" = fc2[["mean"]])
@@ -276,7 +276,7 @@ autoplot(tmp) + xlab("Year") +
 
 ## Estimated components
 
-```{r fig-7-LevelTrendSeas}
+```{r fig-7-LevelTrendSeas, echo=FALSE}
 addstates <- fc1$model$states[,1:3]
 multstates <- fc2$model$states[,1:3]
 colnames(addstates) <- colnames(multstates) <-

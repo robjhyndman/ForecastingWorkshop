@@ -72,7 +72,7 @@ p1
 \end{block}
 \rightline{$\varepsilon_t\sim N(0,1)$, \qquad $T=100$.}
 
-```{r, fig.height=2.2, fig.width=2.2, out.width="50%"}
+```{r, fig.height=2.2, fig.width=2.2, out.width="50%", echo=FALSE}
 p2
 ```
 
@@ -101,7 +101,7 @@ This is a multiple regression with  \textbf{past \emph{errors}}
 as predictors. \emph{Don't confuse this with moving average smoothing!}
 \end{block}
 
-```{r maq, fig.height=2.5}
+```{r maq, fig.height=2.5, echo=FALSE}
 set.seed(2)
 p1 <- autoplot(20 + arima.sim(list(ma = 0.8), n = 100)) +
   ylab("") + ggtitle("MA(1)")
@@ -117,7 +117,7 @@ gridExtra::grid.arrange(p1,p2,nrow=1)
 \end{block}
 \rightline{$\varepsilon_t\sim N(0,1)$,\quad $T=100$.}
 
-```{r, fig.height=2.2, fig.width=2.2, out.width="50%"}
+```{r, fig.height=2.2, fig.width=2.2, out.width="50%", echo=FALSE}
 p1
 ```
 
@@ -128,7 +128,7 @@ p1
 \end{block}
 \rightline{$\varepsilon_t\sim N(0,1)$,\quad $T=100$.}
 
-```{r, fig.height=2.2, fig.width=2.2, out.width="50%"}
+```{r, fig.height=2.2, fig.width=2.2, out.width="50%", echo=FALSE}
 p2
 ```
 
@@ -223,11 +223,10 @@ $$y_t =   c + y_{t-1} + \phi_1 y_{t-1}- \phi_1 y_{t-2} + \theta_1\varepsilon_{t-
  * R uses mean form.
 
 ## US personal consumption
-
-```{r}
+\fontsize{11}{11}\sf
+```{r, fig.height=3.8}
 autoplot(uschange[,"Consumption"]) +
-  xlab("Year") +
-  ylab("Quarterly percentage change") +
+  xlab("Year") + ylab("Quarterly percentage change") +
   ggtitle("US consumption")
 ```
 
