@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -95,7 +95,7 @@ Transformations help to \textbf{stabilize the variance}.
 For ARIMA modelling, we also need to \textbf{stabilize the mean}.
 
 ## Non-stationarity in the mean
-\structure{Identifying non-stationary series}
+\alert{Identifying non-stationary series}
 
 * time plot.
 
@@ -140,7 +140,7 @@ in the original series: ${y'_t = y_t - y_{t-1}}$.
 ## Second-order  differencing
 
 Occasionally the differenced data will not appear stationary and it
-may be necessary to difference the data a second time:\pause\vspace*{-0.6cm}
+may be necessary to difference the data a second time:\pause
 \begin{align*}
 y''_{t}  &=  y'_{t}  - y'_{t - 1} \\
 &= (y_t - y_{t-1}) - (y_{t-1}-y_{t-2})\\
@@ -189,7 +189,7 @@ usmelec %>% log() %>% diff(lag=12) %>%
 * Remaining non-stationarity  can be removed with further first difference.
 
 If $y'_t = y_t - y_{t-12}$ denotes seasonally differenced series, then twice-differenced series is\vspace*{-0.1cm}
-\begin{block}{}\vspace*{-0.8cm}
+\begin{block}{}\vspace*{-0.2cm}
 \begin{align*}
 y^*_t &= y'_t - y'_{t-1} \\
       &= (y_t - y_{t-12}) - (y_{t-1} - y_{t-13}) \\
@@ -198,6 +198,7 @@ y^*_t &= y'_t - y'_{t-1} \\
 \end{block}\vspace*{10cm}
 
 ## Seasonal differencing
+\fontsize{14}{15}\sf
 
 When both seasonal and first differences are applied\dots\pause
 
@@ -206,6 +207,7 @@ which is done first---the result will be the same.
 * If seasonality is strong, we recommend that seasonal differencing be done first because sometimes the resulting series will be stationary and there will be no need for further first difference.
 \pause
 
+###
 It is important that if differencing is used, the differences are
 interpretable.
 
@@ -222,66 +224,48 @@ But taking lag 3 differences for yearly data, for example, results in a model wh
 # Unit root tests
 ## Unit root tests
 
-\structure{Statistical tests to determine the required order of differencing.}
+\alert{Statistical tests to determine the required order of differencing.}
 
 1. Augmented Dickey Fuller test: null hypothesis is that the data are non-stationary and non-seasonal.
 2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null  hypothesis is that the data are stationary and non-seasonal.
 3. Other tests available for seasonal data.
 
-## Dickey-Fuller test
 
-\structure{Test for ``unit root''}
+## KPSS test
+\fontsize{10}{11}\sf
 
-* Estimate regression model
-\[ y'_t = \phi y_{t-1} + b_1 y'_{t-1} + b_2 y'_{t-2} + \cdots + b_k y'_{t-k}
-\]
-where $y'_t$ denotes differenced series \rlap{$y_{t}-y_{t-1}$.}
-
-* Number of lagged terms, $k$, is usually set to be about 3.
-
-* If original series, $y_t$, needs differencing, $\hat\phi\approx 0$.
-
-* If $y_t$ is already stationary, $\hat\phi<0$.
-
-* In R: Use `tseries::adf.test()`.
-
-## Dickey-Fuller test in R
-
-```r
-tseries::adf.test(x,
- alternative = c("stationary", "explosive"),
- k = trunc((length(x)-1)^(1/3)))
+```{r, echo=TRUE}
+library(urca)
+summary(ur.kpss(goog))
 ```
 
 \pause
 
-* $k = \lfloor T - 1\rfloor^{1/3}$
-* Set alternative = `stationary`.
-
-\pause\footnotesize
 
 ```{r, echo=TRUE}
-tseries::adf.test(dj)
+ndiffs(goog)
 ```
 
-## How many differences?
-```r
-ndiffs(x)
-nsdiffs(x)
-```
+
+## Automatically selecting differences
+
+STL decomposition: $y_t = T_t+S_t+R_t$
+
+Seasonal strength $F_s = \max\big(0, 1-\frac{\text{Var}(R_t)}{\text{Var}(S_t+R_t)}\big)$
+
+If $F_s > 0.64$, do one seasonal difference.
+
+\pause\fontsize{12}{15}\sf\vspace*{1cm}
 
 ```{r, echo=TRUE}
-ndiffs(dj)
-nsdiffs(hsales)
+usmelec %>% log() %>% nsdiffs()
+usmelec %>% log() %>% diff(lag=12) %>% ndiffs()
 ```
 
-
-
-# Lab session 10
+# Lab session 14
 ##
-
 \fontsize{48}{60}\sf\centering
-\textbf{Lab Session 10}
+**Lab Session 14**
 
 
 

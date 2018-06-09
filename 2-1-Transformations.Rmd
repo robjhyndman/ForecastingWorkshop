@@ -1,12 +1,12 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "2.2&nbsp; Transformations"
+date: "2.1&nbsp; Transformations"
 fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -22,6 +22,7 @@ source("nicefigs.R")
 # Variance stabilization
 
 ## Variance stabilization
+\fontsize{13}{14}\sf
 
 If the data show different variation at different levels of the series, then a transformation can be useful.
 \pause
@@ -30,7 +31,7 @@ Denote original observations as $y_1,\dots,y_n$ and transformed
 observations as $w_1, \dots, w_n$.
 \pause
 
-\begin{block}{\footnotesize Mathematical transformations for stabilizing
+\begin{block}{Mathematical transformations for stabilizing
 variation}
 \begin{tabular}{llc}
 Square root & $w_t = \sqrt{y_t}$ & $\downarrow$ \\[0.2cm]
@@ -40,7 +41,7 @@ Logarithm & $w_t = \log(y_t)$  & strength
 \end{block}
 \pause
 
-Logarithms, in particular, are useful because they are more interpretable: changes in a log value are **relative (percent) changes on the original scale.**
+Logarithms, in particular, are useful because they are more interpretable: changes in a log value are **relative (percent) changes on the original scale**.
 
 ## Variance stabilization
 
@@ -101,22 +102,32 @@ $$\pause
 
 ## Box-Cox transformations
 
-```{r, cache=TRUE, echo=FALSE}
+
+```{r elec5, cache=TRUE, echo=FALSE}
+library(latex2exp)
 lambda <- seq(1, -1, by=-0.01)
 for(i in seq_along(lambda))
 {
   savepdf(paste("elecBC",i,sep=""))
   print(autoplot(BoxCox(elec,lambda[i])) + xlab("Year") +
-    ylab("") + ggtitle("Transformed Australian electricity demand"))
+    ylab("") +
+    ggtitle(
+      TeX(paste("Transformed Australian electricity demand:  $\\lambda =",format(lambda[i],digits=2,nsmall=2),"$"))
+    ) +
+    scale_y_continuous(breaks=NULL,minor_breaks=NULL) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank()))
   endpdf()
 }
 ```
 
+\vspace*{0.2cm}
 \centerline{\animategraphics[controls,buttonsize=0.3cm,width=12.5cm]{4}{elecBC}{1}{201}}
 
 ## Box-Cox transformations
 
-```{r,echo=TRUE,fig.height=4}
+```{r elec6,echo=TRUE,fig.height=4}
 autoplot(BoxCox(elec,lambda=1/3))
 ```
 
@@ -124,11 +135,11 @@ autoplot(BoxCox(elec,lambda=1/3))
 
 * $y_t^\lambda$ for $\lambda$ close to zero behaves like logs.
 * If some $y_t=0$, then must have $\lambda>0$
-* if some $y_t<0$, no power transformation is possible unless all $y_t$ adjusted by \textbf{adding a constant to all values}.
-* Choose a simple value of $\lambda$.  It makes explanation easier.
-* Results are  relatively insensitive to \rlap{value of $\lambda$}
+* if some $y_t<0$, no power transformation is possible unless all $y_t$ adjusted by **adding a constant to all values**.
+* Simple values of $\lambda$ are easier to explain.
+* Results are  relatively insensitive to  $\lambda$.
 * Often no transformation ($\lambda=1$) needed.
-* Transformation often makes little difference to forecasts but has large effect on PI.
+* Transformation can have very large effect on PI.
 * Choosing $\lambda=0$ is a simple way to force forecasts to be positive
 
 ## Automated Box-Cox transformations
@@ -185,8 +196,9 @@ Let $f(x)$ be back-transformation function, and $Y=f(X)$.
 \end{alertblock}
 
 ## Back transformation
+\vspace*{-0.2cm}
 
-**Box-Cox back-transformation:**\vspace*{-0.5cm}
+**Box-Cox back-transformation:**\vspace*{-0.0cm}
 \begin{align*}
 y_t &= \left\{\begin{array}{ll}
         \exp(w_t)      & \quad \lambda = 0; \\
@@ -241,11 +253,11 @@ eggs %>% ses(lambda=1/3, biasadj=TRUE) %>%
   autoplot
 ```
 
-# Lab session 9
+# Lab session 11
 ##
 
 \fontsize{48}{60}\sf\centering
-\textbf{Lab Session 9}
+**Lab Session 11**
 
 
 

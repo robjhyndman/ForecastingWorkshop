@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -137,7 +137,7 @@ where $\varepsilon_t\sim\text{NID}(0,\sigma^2)$.
 
   * Set $\varepsilon_t=y_t-\ell_{t-1}-b_{t-1} \sim \text{NID}(0,\sigma^2)$.
   * Substituting into the error correction equations for Holt's linear method
-  
+
   \begin{block}{Holt's linear method with additive errors}\vspace*{-0.3cm}
   \begin{align*}
       y_t&=\ell_{t-1}+b_{t-1}+\varepsilon_t\\
@@ -145,7 +145,7 @@ where $\varepsilon_t\sim\text{NID}(0,\sigma^2)$.
       b_t&=b_{t-1}+\alpha\beta^* \varepsilon_t
   \end{align*}
   \end{block}
-  
+
   * For simplicity, set $\beta=\alpha \beta^*$.
 
 ## ETS(A,A,A)

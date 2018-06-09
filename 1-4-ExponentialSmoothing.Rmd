@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -202,12 +202,12 @@ knitr::kable(tab[-(1:6),], booktabs=TRUE)
 ## Example: Sheep in Asia
 \fontsize{10}{10}\sf
 
-```{r fig-7-comp, echo=TRUE}
+```{r fig-7-comp, echo=TRUE, fig.height=3.6}
 autoplot(window(livestock, start=1970)) +
   autolayer(fc1, series="SES", PI=FALSE) +
   autolayer(fc2, series="Linear trend", PI=FALSE) +
   autolayer(fc3, series="Damped trend", PI=FALSE) +
-  ylab("Livestock, sheep in Asia (millions)") 
+  ylab("Livestock, sheep in Asia (millions)")
 ```
 
 # Lab session 7

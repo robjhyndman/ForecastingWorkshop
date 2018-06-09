@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 4
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -208,7 +208,7 @@ Cyclic
 ## Time series patterns
 \small
 
-```{r}
+```{r, fig.height=3.9}
 autoplot(window(elec, start=1980)) +
   ggtitle("Australian electricity production") +
   xlab("Year") + ylab("GWh")
@@ -217,7 +217,7 @@ autoplot(window(elec, start=1980)) +
 ## Time series patterns
 \small
 
-```{r}
+```{r, fig.height=3.9}
 autoplot(bricksq) +
   ggtitle("Australian clay brick production") +
   xlab("Year") + ylab("million units")
@@ -226,7 +226,7 @@ autoplot(bricksq) +
 ## Time series patterns
 \small
 
-```{r}
+```{r, fig.height=3.9}
 autoplot(hsales) +
   ggtitle("Sales of new one-family houses, USA") +
   xlab("Year") + ylab("Total sales")
@@ -235,7 +235,7 @@ autoplot(hsales) +
 ## Time series patterns
 \small
 
-```{r}
+```{r, fig.height=3.9}
 autoplot(ustreas) +
   ggtitle("US Treasury Bill Contracts") +
   xlab("Day") + ylab("price")
@@ -244,7 +244,7 @@ autoplot(ustreas) +
 ## Time series patterns
 \small
 
-```{r}
+```{r, fig.height=3.9}
 autoplot(lynx) +
   ggtitle("Annual Canadian Lynx Trappings") +
   xlab("Year") + ylab("Number trapped")
@@ -276,7 +276,7 @@ gglagplot(beer, lags=9, do.lines=FALSE,
 
 ## Example: Beer production
 
-```{r, echo=FALSE, fig.height=6, fig.width=6}
+```{r, echo=FALSE, fig.height=6, fig.width=6, out.width="8cm"}
 beer <- window(ausbeer, start=1992)
 gglagplot(beer, lags=9, do.lines=FALSE, continuous=FALSE)
 ```
@@ -316,7 +316,7 @@ ggAcf(beer)
 
 ## Aus monthly electricity production
 
-```{r}
+```{r, fig.height=4}
 elec2 <- window(elec, start=1980)
 autoplot(elec2)
 ```

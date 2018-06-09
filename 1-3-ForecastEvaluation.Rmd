@@ -6,7 +6,7 @@ fontsize: 14pt
 output:
   beamer_presentation:
     fig_width: 7
-    fig_height: 3.5
+    fig_height: 4.3
     highlight: tango
     theme: metropolis
     includes:
@@ -183,7 +183,7 @@ autoplot(goog200) +
 
 ## Example: Google stock price
 
-\structure{Na\"{\i}ve forecast:}
+\alert{Na\"{\i}ve forecast:}
 
 \[\hat{y}_{t|t-1}= y_{t-1}\]\pause
 \[e_t = y_t-y_{t-1}\]\pause
@@ -195,7 +195,7 @@ Note: $e_t$ are one-step-forecast residuals
 ## Example: Google stock price
 \fontsize{10}{10}\sf
 
-```{r dj4, echo=TRUE, warning=FALSE}
+```{r dj4, echo=TRUE, warning=FALSE, fig.height=3.6}
 fits <- fitted(naive(goog200))
 autoplot(goog200, series="Data") +
   autolayer(fits, series="Fitted") +
@@ -206,7 +206,7 @@ autoplot(goog200, series="Data") +
 ## Example: Google stock price
 \fontsize{10}{10}\sf
 
-```{r dj5, echo=TRUE}
+```{r dj5, echo=TRUE, fig.height=3.6}
 res <- residuals(naive(goog200))
 autoplot(res) + xlab("Day") + ylab("") +
   ggtitle("Residuals from naïve method")
@@ -459,7 +459,7 @@ text(21,1,"Test data",col="red")
 
 \vspace*{10cm}
 
-## Time series cross-validation 
+## Time series cross-validation
 
 **Traditional evaluation**
 
