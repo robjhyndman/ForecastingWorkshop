@@ -14,9 +14,9 @@ latex:
 clean:
 	rm -rfv $(TARGETS)
 	latexmk -c
-	rm -rfv *_cache/
-	rm -rfv *_files/
-	rm -rfv 3-5-Wrapup.pdf
+	rm -rf *_cache/
+	rm -rf *_files/
+	rm -rf Rfigs/*
 
 deploy:
 	rsync -zrvce 'ssh -p 18765' $(TARGETS) labs/*.csv labs/*.Rmd robjhynd@m80.siteground.biz:public_html/nyc2018
