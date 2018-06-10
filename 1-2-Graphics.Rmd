@@ -376,7 +376,7 @@ autoplot(wn)
 \begin{alertblock}{}
 White noise data is uncorrelated across time with zero mean and constant variance.
 
-(Technically, we require independence as well7)
+(Technically, we require independence as well.)
 \end{alertblock}
 \end{textblock}}
 

@@ -26,7 +26,7 @@ options(digits=4, width=55)
 # Simple exponential smoothing
 
 ## Simple methods
-\fontsize{14}{16}\sf
+\fontsize{14}{15}\sf
 
 Time series $y_1,y_2,\dots,y_T$.
 
@@ -36,7 +36,7 @@ Time series $y_1,y_2,\dots,y_T$.
 
 \begin{block}{Average forecasts}
   \centerline{$\displaystyle\pred{y}{T+h}{T} = \frac1T\sum_{t=1}^T y_t$}
-\end{block}\pause\vspace*{-0.25cm}
+\end{block}\pause\vspace*{-0.35cm}
 
 * Want something in between that weights most recent data more highly.
 * Simple exponential smoothing uses a weighted moving average with weights that decrease exponentially.

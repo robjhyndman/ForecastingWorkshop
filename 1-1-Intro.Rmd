@@ -54,7 +54,7 @@ options(digits=4, width=55)
 \end{itemize}
 \end{block}
 
-\begin{textblock}{5.5}(6.8,0)\begin{alertblock}{}\Large robjhyndman.com\end{alertblock}\end{textblock}
+\begin{textblock}{5.5}(6.9,8.1)\begin{alertblock}{}\Large robjhyndman.com\end{alertblock}\end{textblock}
 
 \vspace*{10cm}
 

@@ -9,7 +9,6 @@ TARGETS=$(SOURCES:%.Rmd=%.pdf)
 default: $(TARGETS)
 
 latex:
-	latexmk 3-3-Hierarchical.tex
 	latexmk 3-5-Wrapup.tex
 
 clean:
@@ -17,7 +16,6 @@ clean:
 	latexmk -c
 	rm -rfv *_cache/
 	rm -rfv *_files/
-	rm -rfv 3-3-Hierarchical.pdf
 	rm -rfv 3-5-Wrapup.pdf
 
 deploy:
