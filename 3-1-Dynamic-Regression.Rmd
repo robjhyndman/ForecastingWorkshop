@@ -520,6 +520,12 @@ fc <- forecast(fit, xreg = fourier(calls, c(10,0), 1690))
 autoplot(fc)
 ```
 
+
+# Lab session 17
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 17**
+
 # Lagged predictors
 
 ## Lagged predictors
