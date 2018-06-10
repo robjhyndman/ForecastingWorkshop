@@ -1,7 +1,7 @@
 ---
 title: "Forecasting: principles and practice"
 author: "Rob J Hyndman"
-date: "3.4&nbsp; Practical issues"
+date: "3.4&nbsp; Extras"
 fontsize: 14pt
 output:
   beamer_presentation:
@@ -22,6 +22,122 @@ knitr::opts_chunk$set(
 library(fpp2)
 options(digits=4, width=55)
 ```
+
+
+# Bagged ETS
+
+## Bagged ETS
+
+\fontsize{10}{10}\sf
+
+### Algorithm: Generating bootstrapped series
+```r
+bootstrap ← function(ts, num.boot) {
+  lambda ← BoxCox.lambda(ts, min=0, max=1)
+  ts.bc ← BoxCox(ts, lambda)
+  if(ts is seasonal) {
+    [trend, seasonal, remainder] ← stl(ts.bc)
+  }
+  else {
+    seasonal ← 0
+    [trend, remainder] ← loess(ts.bc)
+  }
+  recon.series[1] ← ts
+  for(i in 2:num.boot) {
+    boot.sample[i] ← MBB(remainder)
+    recon.series.bc[i] ← trend + seasonal + boot.sample[i]
+    recon.series[i] ← InvBoxCox(recon.series.bc[i], lambda)
+  }
+  return(recon.series)
+```
+
+
+## Bagged ETS
+
+```{r baggedets1, echo=FALSE}
+library(Mcomp)
+df <- cbind(
+  'M495' = M3[[1896]]$x,
+  'Box-Cox transformed' = BoxCox(M3[[1896]]$x, BoxCox.lambda(M3[[1896]]$x))
+)
+autoplot(df, facets=TRUE)
+```
+
+## Bagged ETS
+
+```{r  baggedets2, echo=FALSE}
+df[,2] %>% stl(s.window='periodic') %>% autoplot
+```
+
+## Bagged ETS
+
+```{r baggedets3, echo=FALSE}
+fit <- bld.mbb.bootstrap(Mcomp::M3[[1896]]$x, 11)
+lambda <- BoxCox.lambda(Mcomp::M3[[1896]]$x)
+as.data.frame(fit) %>% as.ts -> z
+tsp(z) <- tsp(Mcomp::M3[[1896]]$x)
+colnames(z) <- c("Data",paste("B",1:10,sep=""))
+```
+
+```{r baggedets4, echo=FALSE}
+stlb <- stl(df[,2], s.window='periodic')
+stlb$time.series[,3] <- BoxCox(z[,2],lambda) - stlb$time.series[,1] - stlb$time.series[,2]
+autoplot(stlb)
+```
+
+## Bagged ETS
+
+```{r baggedets5, echo=FALSE}
+autoplot(Mcomp::M3[[1896]]$x) +
+  xlab("Year") + ylab("M495") +
+  ylim(min(z),max(z))
+```
+
+
+
+## Bagged ETS
+
+```{r baggedets6, echo=FALSE}
+autoplot(Mcomp::M3[[1896]]$x) +
+  forecast::autolayer(z[,2]) +
+  xlab("Year") + ylab("M495") +
+  ylim(min(z),max(z)) +
+  theme(legend.position="none")
+```
+
+## Bagged ETS
+
+```{r baggedets7, echo=FALSE}
+autoplot(Mcomp::M3[[1896]]$x) +
+  forecast::autolayer(z[,2:11]) +
+  xlab("Year") + ylab("M495") +
+  ylim(min(z),max(z)) +
+  theme(legend.position="none")
+```
+
+
+## Bagged ETS
+
+\fontsize{11}{11}\sf
+
+```{r baggedets8, echo=TRUE, cache=TRUE, fig.height=4}
+baggedETS(Mcomp::M3[[1896]]$x) %>%
+  forecast %>% autoplot +
+  xlab("Year") + ylab("M495")
+```
+
+
+## Bagged ETS
+
+```{r baggedets9, echo=FALSE, cache=TRUE, fig.height=4}
+baggedETS(Mcomp::M3[[1896]]$x) %>%
+  forecast %>% autoplot +
+  xlab("Year") + ylab("M495")
+```
+
+ * Intervals show range of point forecasts
+ * They are not prediction intervals
+
 
 # Models for different frequencies
 
