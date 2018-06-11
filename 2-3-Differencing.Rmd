@@ -239,7 +239,6 @@ But taking lag 3 differences for yearly data, for example, results in a model wh
 2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null  hypothesis is that the data are stationary and non-seasonal.
 3. Other tests available for seasonal data.
 
-
 ## KPSS test
 \fontsize{10}{11}\sf
 
@@ -250,11 +249,9 @@ summary(ur.kpss(goog))
 
 \pause
 
-
 ```{r, echo=TRUE}
 ndiffs(goog)
 ```
-
 
 ## Automatically selecting differences
 
@@ -275,10 +272,6 @@ usmelec %>% log() %>% diff(lag=12) %>% ndiffs()
 ##
 \fontsize{48}{60}\sf\centering
 **Lab Session 14**
-
-
-
-
 
 # Backshift notation
 

@@ -106,7 +106,6 @@ if(ncoef != (arma+nf169+nf845))
 
 This is a large model, containing `r ncoef` parameters: `r arma` ARMA coefficients, `r nf169` Fourier coefficients for frequency 169, and `r nf845` Fourier coefficients for frequency 845. We don't use all the Fourier terms for frequency 845 because there is some overlap with the terms of frequency 169 (since $845=5\times169$).
 
-
 # TBATS model
 
 ## TBATS model
@@ -193,15 +192,8 @@ telec %>% tbats() %>% forecast() %>% autoplot()
 
 \vspace*{10cm}
 
-
-# Lab session 18
+# Lab session 20
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 18**
-
-# Lab session 19
-##
-\fontsize{48}{60}\sf\centering
-**Lab Session 19**
-
+**Lab Session 20**
 

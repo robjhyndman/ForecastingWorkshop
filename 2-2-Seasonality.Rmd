@@ -139,10 +139,10 @@ elecequip %>%
 
 
 
-# Lab session 12
+# Lab session 11
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 12**
+**Lab Session 11**
 
 # Forecasting and decomposition
 
@@ -189,6 +189,11 @@ fcast <- stlf(elecequip, method='naive')
 fcast <- stlf(elecequip, method='naive',
   h=36, s.window=11, robust=TRUE)
 ```
+
+# Lab session 12
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 12**
 
 # Lab session 13
 ##

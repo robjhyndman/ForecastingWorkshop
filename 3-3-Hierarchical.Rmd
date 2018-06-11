@@ -731,10 +731,10 @@ where $\bSigma_h$ is the $h$-step base forecast error covariance matrix.
  * Very simple and flexible method. Can work with *any* hierarchical or grouped time series.
  * Conceptually easy to implement: regression of base forecasts on structure matrix.
 
-# Lab Session 20
+# Lab Session 21
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 20**
+**Lab Session 21**
 
 # Temporal hierarchies
 
@@ -982,8 +982,8 @@ Annual & 1      & 3.4   & 1.9   & $-42.9\%$
   \texttt{thief(y)}
 \end{alertblock}
 
-# Lab session 21
+# Lab session 22
 
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 21**
+**Lab Session 22**

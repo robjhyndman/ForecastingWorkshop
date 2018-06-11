@@ -59,8 +59,6 @@ y_t &= \beta_0 + \beta_1 x_{1,t} + \dots + \beta_k x_{k,t} + \eta_t,\\
   * Only the errors $\eta_t$ are assumed to be white noise.
   * In ordinary regression, $\eta_t$ is assumed to be white noise and so $\eta_t = \varepsilon_t$.
 
-
-
 ## Estimation
 \fontsize{14}{15}\sf
 
@@ -86,11 +84,9 @@ y_t = \beta_0 + \beta_1 x_{1,t} + \dots + \beta_k x_{k,t} + \eta_t,
 where $\eta_t$ is an ARMA process.
 \end{block}
 
-
   * If we estimate the model while any variable is non-stationary, the estimated coefficients can be incorrect.
   * Difference variables until all stationary.
   * If necessary, apply same differencing to all variables to preserve interpretability.
-
 
 ## Regression with ARIMA errors
 \fontsize{13}{15}\sf
@@ -157,7 +153,6 @@ qplot(Income,Consumption, data=as.data.frame(uschange)) +
 \pause\begin{alertblock}{}
 Write down the equations for the fitted model.
 \end{alertblock}
-
 
 ## US personal consumption and income
 
@@ -245,6 +240,12 @@ fcast <- forecast(fit,
     c(0,1,0,0,1,1,1,1,1,0,0,1,1,1)))
 autoplot(fcast) + ylab("Electicity demand (GW)")
 ```
+
+# Lab session 18
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 18**
+
 
 # Some useful predictors for linear models
 
@@ -359,7 +360,6 @@ z_2 &= \text{\# Tuesdays in month;} \\
 z_7 &= \text{\# Sundays in month.}
 \end{align*}
 
-
 ## Distributed lags
 
 Lagged values of a predictor.
@@ -372,8 +372,6 @@ Example: $x$ is advertising which has a delayed effect
         & \vdots \\
   x_{m} &= \text{advertising for $m$ months previously.}
 \end{align*}
-
-
 
 # Dynamic harmonic regression
 
@@ -391,7 +389,6 @@ Example: $x$ is advertising which has a delayed effect
 
 ### Disadvantages
  * seasonality is assumed to be fixed
-
 
 ## Eating-out expenditure
 
@@ -520,11 +517,10 @@ fc <- forecast(fit, xreg = fourier(calls, c(10,0), 1690))
 autoplot(fc)
 ```
 
-
-# Lab session 17
+# Lab session 19
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 17**
+**Lab Session 19**
 
 # Lagged predictors
 
@@ -543,8 +539,6 @@ autoplot(fc)
   * These are dynamic systems with input ($x_t$) and output $(y_t)$.
   * $x_t$ is often a leading indicator.
   * There can be multiple predictors.
-
-
 
 ## Lagged predictors
 \fontsize{14}{15}\sf
@@ -597,7 +591,6 @@ fit4 <- auto.arima(insurance[4:40,1], xreg=Advert[4:40,1:4],
 c(fit1$aicc,fit2$aicc,fit3$aicc,fit4$aicc)
 ```
 
-
 ## Example: Insurance quotes and TV adverts
 
 \fontsize{10}{10}\sf
@@ -608,7 +601,6 @@ c(fit1$aicc,fit2$aicc,fit3$aicc,fit4$aicc)
 ```
 
 \pause
-
 
 ```{r tvadvertparam, echo=FALSE}
 # Store coefficients
@@ -638,7 +630,6 @@ fc <- forecast(fit, h=20,
   xreg=cbind(c(Advert[40,1],rep(10,19)), rep(10,20)))
 autoplot(fc)
 ```
-
 
 ## Example: Insurance quotes and TV adverts
 \fontsize{11}{13}\sf

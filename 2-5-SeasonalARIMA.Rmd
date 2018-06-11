@@ -33,10 +33,7 @@ options(digits=4, width=55)
 |       | Non-seasonal part         | Seasonal part of             |
 |       | of the model              | of the model                 |
 
-
 where $m =$ number of observations per year.
-
-
 
 ## Seasonal ARIMA models
 
@@ -70,11 +67,7 @@ $$\pause
 \end{picture}
 \end{footnotesize}
 
-
 \vspace*{10cm}
-
-
-
 
 ## Seasonal ARIMA models
 
@@ -96,9 +89,6 @@ y_{t}  &= (1 + \phi_{1})y_{t - 1} - \phi_1y_{t-2} + (1 + \Phi_{1})y_{t - 4}\\
 +    \varepsilon_{t} + \theta_{1}\varepsilon_{t - 1} + \Theta_{1}\varepsilon_{t - 4}  + \theta_{1}\Theta_{1}\varepsilon_{t - 5}.
 \end{align*}
 \vspace*{10cm}
-
-
-
 
 ## Common ARIMA models
 
@@ -129,8 +119,6 @@ quadratic & $c=0,d+D=3$ & $c\ne0,d+D=2$ \\
 ### Forecast variance and $d+D$
   * The higher the value of $d+D$, the more rapidly the prediction intervals increase in size.
   * For $d+D=0$, the long-term forecast standard deviation will go to the standard deviation of the historical data.
-
-
 
 ## European quarterly retail trade
 
@@ -187,9 +175,7 @@ checkresiduals(fit, plot=FALSE)
 forecast(fit, h=36) %>% autoplot()
 ```
 
-
 ## Cortecosteroid drug sales
-
 
 ```{r h02, echo=FALSE}
 lh02 <- log(h02)
@@ -221,14 +207,12 @@ autoplot(diff(log(h02),12), xlab="Year",
 checkresiduals(fit)
 ```
 
-
 ## Cortecosteroid drug sales
 \fontsize{13}{15}\sf
 
 ```{r, echo=FALSE, dependson='h02tryharder'}
 checkresiduals(fit, plot=FALSE)
 ```
-
 
 ## Cortecosteroid drug sales
 \fontsize{10}{12}\sf
@@ -262,7 +246,6 @@ getrmse(h02,h=24,order=c(2,1,4),seasonal=c(0,1,1),lambda=0)
 getrmse(h02,h=24,order=c(2,1,5),seasonal=c(0,1,1),lambda=0)
 getrmse(h02,h=24,order=c(4,1,1),seasonal=c(2,1,2),lambda=0)
 ```
-
 
 ## Cortecosteroid drug sales
 \fontsize{12}{14}\sf
@@ -309,14 +292,11 @@ knitr::kable(data.frame(Model=modelname[k],RMSE=rmse[k]),
              digits=4)
 ```
 
-
-
 ## Cortecosteroid drug sales
 
   * Models with lowest AICc values tend to give slightly better results than the other models.
   * AICc comparisons must have the same orders of differencing. But RMSE test set comparisons can involve any models.
   * Use the best model available, even if it does not pass all tests.
-
 
 ## Cortecosteroid drug sales
 \fontsize{11}{12}\sf
@@ -338,7 +318,6 @@ autoplot(forecast(fit)) + xlab("Year") +
   ylab("H02 sales (million scripts)") + ylim(0.3,1.8)
 ```
 
-
 ## Cortecosteroid drug sales
 \fontsize{11}{12}\sf
 
@@ -349,13 +328,14 @@ autoplot(forecast(fit)) + xlab("Year") +
   ylab("H02 sales (million scripts)") + ylim(0.3,1.8)
 ```
 
-
+# Lab session 16
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 16**
 
 # ARIMA vs ETS
 
-
 ## ARIMA vs ETS
-
 
   * Myth that ARIMA models are more general than exponential smoothing.
   * Linear exponential smoothing models all special cases of ARIMA models.
@@ -363,9 +343,7 @@ autoplot(forecast(fit)) + xlab("Year") +
   * Many ARIMA models have no exponential smoothing counterparts.
   * ETS models all non-stationary. Models with seasonality or non-damped trend (or both) have two unit roots; all other models have one unit root.
 
-
 ## Equivalences
-
 \fontsize{12}{14}\sf
 
 |**ETS model**  | **ARIMA model**             | **Parameters**                       |
@@ -380,11 +358,7 @@ autoplot(forecast(fit)) + xlab("Year") +
 | ETS(A,A,A)    | ARIMA(0,1,$m+1$)(0,1,0)$_m$ |                                      |
 | ETS(A,A,A)    | ARIMA(1,0,$m+1$)(0,1,0)$_m$ |                                      |
 
-
-
-# Lab session 16
+# Lab session 17
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 16**
-
-
+**Lab Session 17**

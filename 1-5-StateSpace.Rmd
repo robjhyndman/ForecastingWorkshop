@@ -445,8 +445,3 @@ ets(y, model = "ZZZ", damped = NULL,
 \fontsize{48}{60}\sf\centering
 **Lab Session 9**
 
-# Lab session 10
-##
-\fontsize{48}{60}\sf\centering
-**Lab Session 10**
-

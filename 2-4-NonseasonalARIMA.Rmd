@@ -367,7 +367,6 @@ Step 3:
 
 \begin{block}{}Repeat Step 3 until no lower AICc can be found.\end{block}
 
-
 ## Choosing an ARIMA model
 
 ```{r, echo=TRUE, fig.height=4}
@@ -422,7 +421,6 @@ fit %>% forecast() %>% autoplot()
 4. Check the residuals from your chosen model by plotting the ACF of the residuals, and doing a portmanteau test of the residuals. If they do not look like white noise, try a modified model.
 5. Once the residuals look like white noise, calculate forecasts.
 
-
 ## Modelling procedure
 
 \centerline{\includegraphics[height=8.cm]{Figure-8-10}}
@@ -447,7 +445,6 @@ autoplot(eeadj) + xlab("Year") +
 ```{r ee2, echo=TRUE, fig.height=4}
 eeadj %>% diff() %>% autoplot()
 ```
-
 
 ## Seasonally adjusted electrical equipment
 \fontsize{10}{11}\sf
@@ -478,6 +475,11 @@ checkresiduals(fit, plot=FALSE)
 fit %>% forecast() %>% autoplot()
 ```
 
+# Lab session 15
+##
+\fontsize{48}{60}\sf\centering
+**Lab Session 15**
+
 ## Prediction intervals
 
 * Prediction intervals **increase in size with forecast horizon**.
@@ -487,7 +489,6 @@ fit %>% forecast() %>% autoplot()
     * the ARIMA model assumes historical patterns will not change during the forecast period.
     * the ARIMA model assumes uncorrelated future errors
 
-
 ## Bootstrapped prediction intervals
 \fontsize{12}{13}\sf
 
@@ -496,10 +497,3 @@ fit %>% forecast(bootstrap=TRUE) %>% autoplot()
 ```
 
  * No assumption of normally distributed residuals.
-
-
-# Lab session 15
-##
-\fontsize{48}{60}\sf\centering
-**Lab Session 15**
-
