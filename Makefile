@@ -8,9 +8,6 @@ TARGETS=$(SOURCES:%.Rmd=%.pdf)
 
 default: $(TARGETS)
 
-latex:
-	latexmk 3-5-Wrapup.tex
-
 clean:
 	rm -rfv $(TARGETS)
 	latexmk -c
