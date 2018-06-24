@@ -50,7 +50,7 @@ gridExtra::grid.arrange(p1,p2)
 ## Examples
 
 ```{r turk, echo=FALSE}
-telec <- read.csv("data/turkey_elec.csv")
+telec <- read.csv("../data/turkey_elec.csv")
 telec <- msts(telec/1e3, start=2000, seasonal.periods = c(7,354.37,365.25))
 autoplot(telec) +
   ggtitle("Turkish daily electricity demand") +
