@@ -1,0 +1,218 @@
+---
+title: "Lab sessions: Day 1"
+author: "Rob J Hyndman"
+date: "25 June 2018"
+output:
+  html_document:
+    fig_height: 5
+    fig_width: 8
+    toc: yes
+    toc_depth: 1
+    toc_float:
+      collapsed: false
+    number_sections: false
+    theme: readable
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, cache=TRUE, messages=FALSE, warnings=FALSE)
+library(fpp2)
+```
+
+# Lab Session 1
+
+```{r retail}
+retaildata <- read.csv("retail.csv")
+mytimeseries <- ts(retaildata[,4], frequency=12, start=c(1982,4))
+autoplot(mytimeseries)
+```
+
+# Lab Session 2
+
+```{r lab2, dependson='retail'}
+ggseasonplot(mytimeseries)
+ggsubseriesplot(mytimeseries)
+```
+
+There is a strong trend to around 2008, weak seasonality (with a jump in December each year), and some evidence of cycles (with dips in 2001 and 2012).
+
+
+# Lab Session 3
+
+## `bicoal`
+
+`bicoal` is annual data, so you can't do the seasonal plots.
+
+```{r lab3a, dependson='retail'}
+autoplot(bicoal)
+gglagplot(bicoal)
+ggAcf(bicoal)
+```
+
+## `dole`
+
+```{r lab3b, dependson='retail'}
+autoplot(dole)
+ggseasonplot(dole)
+ggsubseriesplot(dole)
+gglagplot(dole)
+ggAcf(dole)
+```
+
+Other series are similar.
+
+
+# Lab Session 4
+
+```{r lab4}
+beer <- window(ausbeer, start=1992)
+fc <- snaive(beer)
+autoplot(fc)
+res <- residuals(fc)
+autoplot(res)
+```
+
+```{r lab4b, dependson='lab4'}
+checkresiduals(fc)
+```
+
+There is some remaining autocorrelation in the residuals: the Null of no joint autocorrelation is clearly rejected. We can also see a significant spike on the seasonal (4th lag) in the ACF. There is considerable information remaining in the residuals which has not been captured with the seasonal naïve method. The residuals do not appear to be too far from Normally distributed.
+
+
+# Lab Session 5
+
+```{r lab5, dependson='retail'}
+train <- window(mytimeseries, end=c(2010,12))
+test <- window(mytimeseries, start=2011)
+autoplot(cbind(Training=train,Test=test))
+f1 <- snaive(train, h=length(test))
+autoplot(f1) + autolayer(test)
+accuracy(f1, test)
+```
+
+The number to look at here is the test set RMSE. That provides a benchmark for comparison when we try other models.
+
+```{r lab5b, dependson='lab5'}
+checkresiduals(f1)
+```
+
+The residuals do not look like white noise there are lots of dynamics left over that need to be explored. They also do not look close to normal, with very long tails.
+
+The accuracy measure are always sensitive to the training/test split. There are better ways to check the robustness of the methods in terms of accuracy such as using a `tsCV()`.
+
+
+# Lab Session 6	
+
+```{r lab6, dependson='retail'}
+e_mean <- tsCV(mytimeseries, meanf)
+e_naive <- tsCV(mytimeseries, naive)
+e_snaive <- tsCV(mytimeseries, snaive)
+e_drift <- tsCV(mytimeseries, rwf, drift=TRUE)
+
+# Construct squared CV errors matrix
+e2 <- cbind(Mean=e_mean^2, Naive=e_naive^2, 
+	    SNaive=e_snaive^2, Drift=e_drift^2)
+# Remove rows with any missing for a fair comparison
+e2 <- na.omit(e2)
+# Find MSE values
+colMeans(e2)
+```
+
+# Lab Session 7
+
+
+```{r lab7}
+# Best model:
+ses(eggs, h=100) %>% accuracy()
+holt(eggs, h=100, damped=FALSE) %>% accuracy()
+holt(eggs, h=100, damped=TRUE) %>% accuracy()
+```
+
+These RMSE values are not really comparable because the models have different numbers of parameters.
+
+The best model is the last one.
+
+```{r lab7b}
+holt(eggs, h=100, damped=TRUE) %>% forecast() %>% autoplot()
+holt(eggs, h=100, damped=TRUE) %>% checkresiduals()
+```
+
+The residuals are pretty good and (just) pass the Ljung-Box test. However, the forecast make little sense (with the prediction intervals going negative very quickly).
+
+
+# Lab Session 8
+
+```{r lab8a, dependson='retail'}
+autoplot(mytimeseries)
+```
+
+The seasonal variation increases with the level of the series. So we need to use multiplicative seasonality.
+
+
+```{r lab8b, dependson='retail'}
+fc1 <- hw(mytimeseries, seasonal='multiplicative', damped=FALSE)
+autoplot(fc1)
+fc2 <- hw(mytimeseries, seasonal='multiplicative', damped=TRUE)
+autoplot(fc2)
+```
+
+
+```{r ex8c} 
+accuracy(fc1)
+accuracy(fc2)
+```
+
+There is not much difference between these models, and we would expect the trend to continue, so I would prefer to use the non-damped version.
+
+```{r ex8d}
+checkresiduals(fc1)
+```
+
+There are significant correlations in the residuals, especially at lag 12. So these residuals do not look like white noise.
+
+```{r ex8e}
+train %>% window(end=c(2010,12)) %>%
+  hw(seasonal='multiplicative', damped=FALSE) %>%
+  accuracy(x=mytimeseries)
+```
+
+The test set RMSE is much better than for the seasonal naïve method. 
+
+
+# Lab Session 9
+
+```{r lab9, dependson='retail'}
+fit <- ets(mytimeseries)
+summary(fit)
+```
+
+This is equivalent to a damped-trend multiplicative Holt-Winters' method. The very small $\beta$ and $\gamma$ values show that the seasonality and trend change slowly. There is also very little damping ($\phi$ is close to 1).
+
+
+```{r}
+bicoal %>% ets() %>% forecast() %>% autoplot()
+```
+
+Not too bad given the noisy data.
+
+```{r}
+bricksq %>% ets() %>% forecast() %>% autoplot()
+```
+
+These are great forecasts which have adapted to the trend and seasonality really well.
+
+```{r}
+dole %>% ets() %>% forecast() %>% autoplot()
+```
+
+The seasonality seems to be over-done, but the wide prediction intervals are probably sensible apart from the fact that they go negative.
+
+
+```{r}
+lynx %>% ets() %>% forecast() %>% autoplot()
+```
+
+These data are cyclic, and ETS does not handle cycles in time series.
+
+
