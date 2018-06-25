@@ -14,4 +14,4 @@ clean:
 	rm -rf *_files/
 
 deploy:
-	rsync -zrvce 'ssh -p 18765' * robjhynd@m80.siteground.biz:public_html/nyc2018
+	rsync -zrvce 'ssh -p 18765' *.Rmd *.csv *.html robjhynd@m80.siteground.biz:public_html/nyc2018
