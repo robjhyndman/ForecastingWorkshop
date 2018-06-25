@@ -158,20 +158,20 @@ autoplot(fc2)
 ```
 
 
-```{r ex8c} 
+```{r lab8c} 
 accuracy(fc1)
 accuracy(fc2)
 ```
 
 There is not much difference between these models, and we would expect the trend to continue, so I would prefer to use the non-damped version.
 
-```{r ex8d}
+```{r lab8d}
 checkresiduals(fc1)
 ```
 
 There are significant correlations in the residuals, especially at lag 12. So these residuals do not look like white noise.
 
-```{r ex8e}
+```{r lab8e}
 train %>% window(end=c(2010,12)) %>%
   hw(seasonal='multiplicative', damped=FALSE) %>%
   accuracy(x=mytimeseries)
@@ -214,5 +214,4 @@ lynx %>% ets() %>% forecast() %>% autoplot()
 ```
 
 These data are cyclic, and ETS does not handle cycles in time series.
-
 

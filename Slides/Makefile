@@ -21,4 +21,4 @@ clean:
 	rm -rf Rfigs/*
 
 deploy:
-	rsync -zrvce 'ssh -p 18765' $(pdfTARGETS) ../labs/*.csv ../labs/*.Rmd robjhynd@m80.siteground.biz:public_html/nyc2018
+	rsync -zrvce 'ssh -p 18765' $(pdfTARGETS) ../labs/* robjhynd@m80.siteground.biz:public_html/nyc2018
