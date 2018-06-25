@@ -75,43 +75,24 @@ test <- window(mytimeseries, start=2011)
 
 ```{r lab19a, dependson='retail'}
 lambda <- BoxCox.lambda(mytimeseries)
-fit1 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 1),
-          seasonal=FALSE, lambda=lambda)
-fit2 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 2),
-          seasonal=FALSE, lambda=lambda)
-fit3 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 3),
-          seasonal=FALSE, lambda=lambda)
-fit4 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 4),
-          seasonal=FALSE, lambda=lambda)
-fit5 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 5),
-          seasonal=FALSE, lambda=lambda)
-fit6 <- auto.arima(mytimeseries,
-          xreg=fourier(mytimeseries, 6),
-          seasonal=FALSE, lambda=lambda)
-c(fit1$aicc,fit2$aicc,fit3$aicc,fit4$aicc,fit5$aicc,fit6$aicc)
-```
-
-```{r lab19b, dependson='lab19a'}
-checkresiduals(fit6)
-fc <- forecast(fit6, 
-      xreg=fourier(mytimeseries, 6,36))
-autoplot(fc)
-```
-
-```{r lab19c, dependson='retail'}
-fit6 <- auto.arima(train,
-          xreg=fourier(train, 6),
-          seasonal=FALSE, lambda=lambda)
-fc <- forecast(fit6, 
-      xreg=fourier(train, 6,36))
+# Find the order of Fourier terms which gives minimum AIC
+bestmodel <- list(aicc=Inf)
+for(k in seq(6)) {
+  fit <- auto.arima(train, lambda=lambda,
+    xreg=fourier(train, K=k))
+  if(fit$aicc < bestmodel$aicc) {
+    bestmodel <- fit
+    bestK <- k
+  }
+}
+fc <- forecast(bestmodel, xreg=fourier(train, bestK, 24))
 accuracy(fc, test)
 ```
 
+```{r lab19b, dependson='lab19a'}
+checkresiduals(fc)
+autoplot(fc)
+```
 
 # Lab Session 20
 
@@ -139,11 +120,10 @@ accuracy(fc2, gastest)
 ```{r lab20d}
 # Find the order of Fourier terms which gives minimum AIC
 bestmodel <- list(aicc=Inf)
-for(k in 1:26) {
+for(k in seq(26)) {
   fit <- auto.arima(gastrain,
     xreg=fourier(gastrain, K=k))
-  if(fit$aicc < bestmodel$aicc)
-  {
+  if(fit$aicc < bestmodel$aicc) {
     bestmodel <- fit
     bestK <- k
   }
@@ -159,46 +139,30 @@ library(hts)
 plot(infantgts)
 smatrix(infantgts)
 
-# Forecast 10-step-ahead and reconcile the forecasts
+# Forecast 10-steps-ahead and reconcile the forecasts
 infantforecast <- forecast(infantgts, h=10)
 
-# Plot the forecasts including the last ten historical years
+# Plot the forecasts including only the last ten historical years
 plot(infantforecast, include=10)
-```
 
-```{r lab21b}
-# Create a matrix of all aggregated time series
-allts_infant <- aggts(infantgts)
-
-# Forecast all series using ARIMA models
-allf <- matrix(, nrow=10, ncol=ncol(allts_infant))
-for(i in 1:ncol(allts_infant))
-  allf[,i] <- forecast(auto.arima(allts_infant[,i]), h=10)$mean
-allf <- ts(allf, start=2004)
-
-# combine the forecasts with the group matrix to get a gts object
-y.f <- combinef(allf, groups = infantgts$groups)
-```
-
-```{r lab21c}
-# set up training and testing samples
-data <- window(infantgts, end=1993)
+# set up training and testing sets
+training <- window(infantgts, end=1993)
 test <- window(infantgts, start=1994)
 
 # Compute forecasts on training data
-forecast <- forecast(data, h=10)
+forecast <- forecast(training, h=10)
 
 # calculate ME, RMSE, MAE, MAPE, MPE and MASE
-accuracy(forecast, test)
+accuracy.gts(forecast, test)
 ```
 
-```{r lab21d}
+```{r lab21b}
 # Overall forecast accuracy
 rmse <- accuracy(forecast, test)["RMSE",]
 sqrt(sum(rmse^2))
 ```
 
-```{r lab21e}
+```{r lab21c}
 forecast_bu <- forecast(data, h=10, method="bu")
 sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 ```
@@ -207,19 +171,24 @@ sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 # Lab Session 22
 
 
-```{r, dependson='retail'}
+```{r lab22a, dependson='retail'}
 library(thief)
 lambda <- BoxCox.lambda(mytimeseries)
-fcarima <- forecast(auto.arima(mytimeseries, lambda=lambda), h=36)
-fcthief <- thief(mytimeseries, usemodel='arima', lambda=lambda, h=36)
+fcarima <- forecast(auto.arima(train, lambda=lambda), h=length(test))
+fcthief <- thief(train, usemodel='arima', lambda=lambda, h=length(test))
 autoplot(mytimeseries) +
   autolayer(fcthief, series="Thief") +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
-```{r}
-autoplot(window(mytimeseries, start=2012)) +
+```{r lab22b}
+autoplot(window(train, start=2012)) +
   autolayer(fcthief, series="Thief") +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
+```
+
+```{r lab22c}
+accuracy(fcarima, test)
+accuracy(fcthief, test)
 ```
 
