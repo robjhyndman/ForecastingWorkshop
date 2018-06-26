@@ -229,7 +229,7 @@ ggtsdisplay(e)
 ```
 
 ```{r lab17e, dependson='retail'}
-etsfn <- function(y,h)
+etsfc <- function(y,h)
 {
   y %>% ets(y) %>% forecast(h=h)
 }
@@ -238,9 +238,9 @@ arimafc <- function(y,h)
   y %>% auto.arima(y, lambda=BoxCox.lambda(y)) %>% forecast(h=h)
 }
 
-e1 <- tsCV(mytimeseries, etsfn)
+e1 <- tsCV(mytimeseries, etsfc)
 e2 <- tsCV(mytimeseries, arimafc)
-e <- cbind(e1, e2) %>% na.omit()
-colMeans(e^2)
+#e <- cbind(e1, e2) %>% na.omit()
+#colMeans(e^2)
 ```
 

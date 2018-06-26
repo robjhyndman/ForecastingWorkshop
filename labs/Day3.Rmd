@@ -117,7 +117,7 @@ fc2 <- stlf(gastrain)
 accuracy(fc2, gastest)
 ```
 
-```{r lab20d}
+```r lab20d}
 # Find the order of Fourier terms which gives minimum AIC
 bestmodel <- list(aicc=Inf)
 for(k in seq(26)) {
@@ -163,7 +163,7 @@ sqrt(sum(rmse^2))
 ```
 
 ```{r lab21c}
-forecast_bu <- forecast(data, h=10, method="bu")
+forecast_bu <- forecast(training, h=10, method="bu")
 sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 ```
 
@@ -173,6 +173,8 @@ sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 
 ```{r lab22a, dependson='retail'}
 library(thief)
+train <- window(mytimeseries, end=c(2010,12))
+test <- window(mytimeseries, start=2011)
 lambda <- BoxCox.lambda(mytimeseries)
 fcarima <- forecast(auto.arima(train, lambda=lambda), h=length(test))
 fcthief <- thief(train, usemodel='arima', lambda=lambda, h=length(test))
@@ -181,13 +183,13 @@ autoplot(mytimeseries) +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
-```{r lab22b}
-autoplot(window(train, start=2012)) +
+```{r lab22b, dependson=c('retail','lab22a')}
+autoplot(train, include=60) +
   autolayer(fcthief, series="Thief") +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
-```{r lab22c}
+```{r lab22c, dependson='lab22a'}
 accuracy(fcarima, test)
 accuracy(fcthief, test)
 ```

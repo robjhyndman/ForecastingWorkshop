@@ -268,10 +268,10 @@ usmelec %>% log() %>% nsdiffs()
 usmelec %>% log() %>% diff(lag=12) %>% ndiffs()
 ```
 
-# Lab session 14
+# Lab session 15
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 14**
+**Lab Session 15**
 
 # Backshift notation
 

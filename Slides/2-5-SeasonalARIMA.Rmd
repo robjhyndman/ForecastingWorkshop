@@ -328,10 +328,10 @@ autoplot(forecast(fit)) + xlab("Year") +
   ylab("H02 sales (million scripts)") + ylim(0.3,1.8)
 ```
 
-# Lab session 16
+# Lab session 17
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 16**
+**Lab Session 17**
 
 # ARIMA vs ETS
 
@@ -358,7 +358,7 @@ autoplot(forecast(fit)) + xlab("Year") +
 | ETS(A,A,A)    | ARIMA(0,1,$m+1$)(0,1,0)$_m$ |                                      |
 | ETS(A,A,A)    | ARIMA(1,0,$m+1$)(0,1,0)$_m$ |                                      |
 
-# Lab session 17
+# Lab session 18
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 17**
+**Lab Session 18**

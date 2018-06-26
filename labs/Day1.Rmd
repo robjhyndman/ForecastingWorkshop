@@ -215,3 +215,67 @@ lynx %>% ets() %>% forecast() %>% autoplot()
 
 These data are cyclic, and ETS does not handle cycles in time series.
 
+# Lab Session 10
+
+```{r lab10, dependson='retail'}
+train <- window(mytimeseries, end=c(2010,12))
+test <- window(mytimeseries, start=2011)
+
+f1 <- snaive(train, h=length(test))
+f2 <- rwf(train, h=length(test))
+f3 <- rwf(train, drift=TRUE, h=length(test))
+f4 <- meanf(train, h=length(test))
+f5 <- hw(train, h=length(test), 
+         seasonal='multiplicative')
+f6 <- ets(train) %>% forecast(h=length(test))
+
+c(
+  SNaive=accuracy(f1, test)[2,"RMSE"],
+  Naive=accuracy(f2, test)[2,"RMSE"],
+  Drift=accuracy(f3, test)[2,"RMSE"],
+  Mean=accuracy(f4, test)[2,"RMSE"],
+  HW=accuracy(f5, test)[2,"RMSE"], 
+  ETS=accuracy(f6, test)[2,"RMSE"])
+```
+
+These results might depend on the peculiarities of the test set. That's why we usually prefer to do a cross-validation approach where we have many test sets.
+
+```{r lab10b, dependson='retail'}
+e1 <- tsCV(mytimeseries, snaive, h=12)
+e2 <- tsCV(mytimeseries, naive, h=12)
+e3 <- tsCV(mytimeseries, rwf, drift=TRUE, h=12)
+e4 <- tsCV(mytimeseries, meanf, h=12)
+e5 <- tsCV(mytimeseries, hw, 
+          seasonal='multiplicative', h=12)
+etsfc <- function(y,h,...)
+{
+  ets(y,...) %>% forecast(h=h)
+}
+e6 <- tsCV(mytimeseries, etsfc, h=12, model="MAM", damped=TRUE)
+
+MSE <- cbind(
+  h=1:12,
+  SNaive=colMeans(tail(e1^2, -14)^2, na.rm=TRUE),
+  Naive=colMeans(tail(e2^2, -14)^2, na.rm=TRUE),
+  Drift=colMeans(tail(e3^2, -14)^2, na.rm=TRUE),
+  Mean = colMeans(tail(e4^2, -14)^2, na.rm=TRUE),
+  HW=colMeans(tail(e5^2, -14)^2, na.rm=TRUE),
+  ETS=colMeans(tail(e6^2, -14)^2, na.rm=TRUE))
+
+MSE
+colMeans(sqrt(MSE[,-1]))
+```
+
+Here I have simply removed the first 14 rows to ensure we have complete forecasts for all times. It might be better to remove the first few years, to avoid the problem of having unreliable forecasts when the training data is too short.
+
+Finally, we do the calculation allowing `ets` to select a different model every time.
+
+```{r lab10c, dependson='lab10b'}
+e7 <- tsCV(mytimeseries, etsfc, h=12)
+
+MSE <- cbind(MSE,
+  ETS2 = colMeans(tail(e7^2, -14)^2, na.rm=TRUE))
+MSE
+colMeans(sqrt(MSE[,-1]))
+```
+

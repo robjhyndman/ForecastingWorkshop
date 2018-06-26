@@ -475,10 +475,10 @@ checkresiduals(fit, plot=FALSE)
 fit %>% forecast() %>% autoplot()
 ```
 
-# Lab session 15
+# Lab session 16
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 15**
+**Lab Session 16**
 
 ## Prediction intervals
 

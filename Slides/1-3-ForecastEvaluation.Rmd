@@ -409,10 +409,10 @@ autoplot(tmp) + xlab("Day") + ylab("Price") +
 \fontsize{11}{11}\sf
 
 ```r
-googtrain <- window(goog200, start=1992, end=c(2007,4))
-googfc1 <- meanf(googtrain, h=10)
-googfc2 <- rwf(googtrain, h=10)
-googfc3 <- snaive(googtrain, h=10)
+googtrain <- window(goog200,end=180)
+googfc1 <- meanf(googtrain,h=20)
+googfc2 <- rwf(googtrain,h=20)
+googfc3 <- rwf(googtrain,h=20,drift=TRUE)
 accuracy(googfc1, goog200)
 accuracy(googfc2, goog200)
 accuracy(googfc3, goog200)
