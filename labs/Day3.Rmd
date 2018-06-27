@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo=TRUE, cache=TRUE, messages=FALSE, warnings=FALSE)
 library(fpp2)
 ```
 
-# Lab Session 18
+# Lab Session 19
 
 ```{r lab18a}
 avecost <- motel[,"Takings"] / motel[,"Roomnights"]
@@ -63,7 +63,7 @@ autoplot(fc)
 ```
 
 
-# Lab Session 19
+# Lab Session 20
 
 
 ```{r retail}
@@ -74,7 +74,7 @@ test <- window(mytimeseries, start=2011)
 ```
 
 ```{r lab19a, dependson='retail'}
-lambda <- BoxCox.lambda(mytimeseries)
+lambda <- 0
 # Find the order of Fourier terms which gives minimum AIC
 bestmodel <- list(aicc=Inf)
 for(k in seq(6)) {
@@ -94,7 +94,7 @@ checkresiduals(fc)
 autoplot(fc)
 ```
 
-# Lab Session 20
+# Lab Session 21
 
 ```{r lab20a}
 fit <- tbats(mytimeseries)
@@ -132,7 +132,7 @@ fc3 <- forecast(bestmodel, xreg=fourier(gastrain, bestK, 24))
 accuracy(fc3, gastest)
 ```
 
-# Lab Session 21
+# Lab Session 22
 
 ```{r lab21a, fig.height=8}
 library(hts)
@@ -168,8 +168,7 @@ sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 ```
 
 
-# Lab Session 22
-
+# Lab Session 23
 
 ```{r lab22a, dependson='retail'}
 library(thief)
