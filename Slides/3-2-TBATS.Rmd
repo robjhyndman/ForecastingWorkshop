@@ -192,8 +192,8 @@ telec %>% tbats() %>% forecast() %>% autoplot()
 
 \vspace*{10cm}
 
-# Lab session 20
+# Lab session 21
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 20**
+**Lab Session 21**
 

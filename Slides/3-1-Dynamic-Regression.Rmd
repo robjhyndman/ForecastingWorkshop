@@ -241,10 +241,10 @@ fcast <- forecast(fit,
 autoplot(fcast) + ylab("Electicity demand (GW)")
 ```
 
-# Lab session 18
+# Lab session 19
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 18**
+**Lab Session 19**
 
 
 # Some useful predictors for linear models
@@ -517,10 +517,10 @@ fc <- forecast(fit, xreg = fourier(calls, c(10,0), 1690))
 autoplot(fc)
 ```
 
-# Lab session 19
+# Lab session 20
 ##
 \fontsize{48}{60}\sf\centering
-**Lab Session 19**
+**Lab Session 20**
 
 # Lagged predictors
 
