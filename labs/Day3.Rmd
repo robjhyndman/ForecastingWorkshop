@@ -29,28 +29,28 @@ avecost <- motel[,"Takings"] / motel[,"Roomnights"]
 `cpimel` contains quarterly CPI values. We can use linear approximation to interpolate the quarterly data to obtain monthly CPI.
 
 ```{r lab18b}
-qcpi <- ts(approx(time(cpimel), cpimel, time(motel), rule=2)$y,
+mcpi <- ts(approx(time(cpimel), cpimel, time(motel), rule=2)$y,
   start=start(motel), frequency=frequency(motel))
 ```
 
 ```{r lab18c}
-autoplot(cbind(avecost, qcpi), facets=TRUE)
+autoplot(cbind(avecost, mcpi), facets=TRUE)
 ```
 
 We expect avecost to be related to CPI, but the variance of average cost increases with the level. So logs will help. Also, average cost is likely to be a multiple of CPI as it will depend on lots of individual costs, each of which will increase with CPI. So logarithms will turn the multiplicative relationship into something additive which we can model.
 
 ```{r lab18d}
-autoplot(log(cbind(avecost, qcpi)), facets=TRUE)
+autoplot(log(cbind(avecost, mcpi)), facets=TRUE)
 ```
 
 ```{r lab18e}
-(fit <- auto.arima(avecost, xreg=log(qcpi), lambda=0, biasadj=TRUE))
+(fit <- auto.arima(avecost, xreg=log(mcpi), lambda=0, biasadj=TRUE))
 ```
 
 We will use an ARIMA model for CPI:
 
 ```{r lab18f}
-fitcpi <- auto.arima(qcpi)
+fitcpi <- auto.arima(mcpi)
 fccpi <- forecast(fitcpi, h=12)
 autoplot(fccpi)
 ```

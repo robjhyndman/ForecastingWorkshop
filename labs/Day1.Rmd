@@ -274,7 +274,7 @@ Finally, we do the calculation allowing `ets` to select a different model every 
 e7 <- tsCV(mytimeseries, etsfc, h=12)
 
 MSE <- cbind(MSE,
-  ETS2 = colMeans(tail(e7^2, -14)^2, na.rm=TRUE))
+  ETS2 = colMeans(tail(e7^2, -14), na.rm=TRUE))
 MSE
 colMeans(sqrt(MSE[,-1]))
 ```
