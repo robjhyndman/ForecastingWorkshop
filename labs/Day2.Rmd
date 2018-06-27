@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo=TRUE, cache=TRUE, messages=FALSE, warnings=FALSE)
 library(fpp2)
 ```
 
-# Lab Session 10
+# Lab Session 11
 
 
 ```{r lab10a}
@@ -32,12 +32,12 @@ No transformation required
 ```{r lab10b}
 autoplot(mcopper)
 (lambda <- BoxCox.lambda(mcopper))
-mcopper %>% BoxCox(lambda=lambda) %>% autoplot
+mcopper %>% BoxCox(lambda=0) %>% autoplot
 ```
 
 ```{r lab10c}
 autoplot(enplanements)
-(lambda <- BoxCox.lambda(enplanements))
+(lambda <- BoxCox.lambda(enplanements, lower=0))
 # I don't like such strong transformations. Will use 0 instead
 enplanements %>% BoxCox(lambda=0) %>% autoplot
 ```
@@ -46,6 +46,7 @@ enplanements %>% BoxCox(lambda=0) %>% autoplot
 autoplot(a10)
 (lambda <- BoxCox.lambda(a10))
 a10 %>% BoxCox(lambda=lambda) %>% autoplot
+a10 %>% BoxCox(lambda=0) %>% autoplot
 ```
 
 ```{r lab10e}
@@ -55,192 +56,211 @@ autoplot(cangas)
 ```{r retail}
 retaildata <- read.csv("retail.csv")
 mytimeseries <- ts(retaildata[,4], frequency=12, start=c(1982,4))
-(lambda <- BoxCox.lambda(mytimeseries))
-mytimeseries %>% BoxCox(lambda=lambda) %>% autoplot()
-```
-
-# Lab Session 11
-
-```{r lab11}
-bricksq %>% mstl(s.window=11) %>% autoplot()
-```
-
-```{r lab11b}
-bricksq %>% mstl(s.window=11) %>% seasadj() %>% autoplot()
-bricksq %>% mstl(s.window=11, robust=TRUE) %>% seasadj() %>% autoplot()
+(lambda <- BoxCox.lambda(mytimeseries, lower=0))
+# Essentially a log
+mytimeseries %>% log() %>% autoplot()
 ```
 
 # Lab Session 12
 
-```{r lab12}
-sa <- bricksq %>% mstl(s.window=11) %>% seasadj()
-sa %>% naive() %>% autoplot()
-fc <- stlf(bricksq, s.window=11, method='naive')
-autoplot(fc)
-checkresiduals(fc)
+```{r lab12a}
+BoxCox.lambda(bricksq)
+bricksq %>% BoxCox(lambda='auto') %>% autoplot
+bricksq %>% 
+  mstl(s.window=11, lambda="auto") %>%
+  autoplot()
+bricksq %>% 
+  mstl(lambda="auto", robust=TRUE) %>%
+  autoplot()
+```
+
+```{r lab12b}
+bricksq %>%
+  mstl(s.window=11, lambda="auto") %>%
+  seasadj() %>% autoplot()
+bricksq %>% 
+  mstl(s.window=11, lambda="auto", robust=TRUE) %>% 
+  seasadj() %>% autoplot()
 ```
 
 # Lab Session 13
 
-```{r lab13a, dependson='retail'}
-fit <- mstl(mytimeseries, lambda=lambda)
-autoplot(fit)
-mytimeseries %>% stlf(lambda=lambda) %>% autoplot()
-```
-
-Now try it on the training/test split
-
-```{r lab13b, dependson='retail'}
-train <- window(mytimeseries, end=c(2010,12))
-test <- window(mytimeseries, start=2011)
-
-fc <- stlf(train, lambda=lambda)
-autoplot(train) +
-  autolayer(fc) +autolayer(test, series="Tests")
-accuracy(fc, test)
+```{r lab13}
+sa <- bricksq %>% mstl(s.window=11, lambda=0.5) %>% seasadj()
+sa %>% naive() %>% autoplot()
+fc <- stlf(bricksq, s.window="periodic", lambda=0.5)
+autoplot(fc)
+checkresiduals(fc)
 ```
 
 # Lab Session 14
 
-```{r}
-usnetelec %>% autoplot
-usnetelec %>% diff %>% autoplot
+```{r lab14a, dependson='retail'}
+lambda <- 0
+fit <- mstl(mytimeseries)
+autoplot(fit)
+mytimeseries %>% stlf() %>% autoplot()
 ```
 
-```{r}
-usgdp %>% autoplot
-usgdp %>% diff %>% autoplot
-```
+Now try it on the training/test split
 
-```{r}
-lambda <- BoxCox.lambda(mcopper)
-mcopper %>% BoxCox(lambda=lambda) %>% autoplot
-mcopper %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% autoplot
-```
+```{r lab14b, dependson='retail'}
+train <- window(mytimeseries, end=c(2010,12))
+test <- window(mytimeseries, start=2011)
 
-```{r}
-enplanements %>% log %>% autoplot
-enplanements %>% log %>% diff(lag=12) %>% autoplot
-enplanements %>% log %>% diff(lag=12) %>% diff %>% autoplot
-```
-
-```{r}
-visitors %>% autoplot
-lambda <- BoxCox.lambda(visitors)
-visitors %>% BoxCox(lambda=lambda) %>% autoplot
-visitors %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% autoplot
-visitors %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% diff %>% autoplot
-```
-
-```{r lab14e, dependson='retail'}
-mytimeseries %>% 
-  BoxCox(lambda=lambda) %>%
-  diff(lag=12) %>%
-  diff(lag=1) %>%
-  autoplot
+fc <- stlf(train, h=length(test))
+autoplot(train) +
+  autolayer(fc) + autolayer(test, series="Tests")
+accuracy(fc, test)
 ```
 
 # Lab Session 15
 
-```{r}
+```{r lab15a}
+usnetelec %>% autoplot()
+usnetelec %>% ndiffs()
+usnetelec %>% diff() %>% autoplot()
+```
+
+```{r lab15b}
+usgdp %>% autoplot()
+ndiffs(usgdp)
+usgdp %>% diff(differences=2) %>% autoplot()
+```
+
+```{r lab15c}
+lambda <- BoxCox.lambda(mcopper)
+mcopper %>% BoxCox(lambda=lambda) %>% autoplot()
+mcopper %>% BoxCox(lambda=lambda) %>% nsdiffs()
+mcopper %>% BoxCox(lambda=lambda) %>% ndiffs()
+mcopper %>% BoxCox(lambda=lambda) %>% diff(lag=1) %>% autoplot()
+```
+
+```{r lab15d}
+enplanements %>% log() %>% autoplot()
+enplanements %>% log() %>% nsdiffs()
+enplanements %>% log() %>% diff(lag=12) %>% autoplot()
+enplanements %>% log() %>% diff(lag=12) %>% ndiffs()
+enplanements %>% log() %>% diff(lag=12) %>% diff() %>% autoplot()
+```
+
+```{r lab15e}
+visitors %>% autoplot()
+lambda <- BoxCox.lambda(visitors)
+visitors %>% BoxCox(lambda=lambda) %>% autoplot()
+visitors %>% BoxCox(lambda=lambda) %>% nsdiffs()
+visitors %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% autoplot()
+visitors %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% ndiffs()
+visitors %>% BoxCox(lambda=lambda) %>% diff(lag=12) %>% diff() %>% autoplot
+```
+
+```{r lab15f, dependson='retail'}
+mytimeseries %>% 
+  BoxCox(lambda=0) %>% nsdiffs()
+mytimeseries %>% 
+  BoxCox(lambda=0) %>%
+  diff(lag=12) %>% ndiffs()
+mytimeseries %>% 
+  BoxCox(lambda=0) %>%
+  diff(lag=12) %>%
+  diff(lag=1) %>%
+  autoplot()
+```
+
+# Lab Session 16
+
+```{r lab16}
 wmurders %>% autoplot()
 wmurders %>% log() %>% autoplot()
-fit <- auto.arima(wmurders, lambda=0, stepwise=FALSE, approximation=FALSE, max.p=10, max.q=10, max.order=10)
+fit <- auto.arima(wmurders, lambda=0)
 checkresiduals(fit)
 forecast(fit) %>% autoplot()
 wmurders %>% ets() %>% forecast() %>% autoplot()
 wmurders %>% ets(lambda=0, model="AAN") %>% forecast() %>% autoplot()
 ```
 
-# Lab Session 16
+# Lab Session 17
 
 
-```{r lab16, dependson='lab13b'}
-lambda <- BoxCox.lambda(train)
-auto.arima(train, lambda=lambda)
-(arimamod <- auto.arima(train,
-              D=1, lambda=lambda,
+```{r lab17, dependson='lab14b'}
+lambda <- 0
+(arimamod1 <- auto.arima(train, lambda=lambda))
+(arimamod2 <- auto.arima(train,
+              lambda=lambda,
               stepwise=FALSE,
               approximation=FALSE))
+checkresiduals(arimamod1)
+checkresiduals(arimamod2)
+arimamod1 %>% forecast(h=length(test)) %>% autoplot()
+arimamod2 %>% forecast(h=length(test)) %>% autoplot() + autolayer(test, series="Test")
 ```
 
-```{r lab16b, dependson='lab16'}
+```{r lab17b, dependson='lab17'}
 (etsmod <- ets(train))
 
 f1 <- snaive(train, h=length(test))
 f2 <- hw(train, h=length(test), seasonal='multi')
 f3 <- forecast(etsmod, h=length(test))
 f4 <- stlf(train, lambda=lambda, h=length(test))
-f5 <- forecast(arimamod, h=length(test))
+f5 <- forecast(arimamod1, h=length(test))
+f6 <- forecast(arimamod2, h=length(test))
 ```
 
-```{r}
-checkresiduals(f1)
-checkresiduals(f2)
-checkresiduals(f3)
-checkresiduals(f4)
-checkresiduals(f5)
+```{r lab17d}
+c(
+  SNaive=accuracy(f1,test)["Test set","RMSE"],
+  HW=accuracy(f2,test)["Test set","RMSE"],
+  ETS=accuracy(f3,test)["Test set","RMSE"],
+  STLF=accuracy(f4,test)["Test set","RMSE"],
+  ARIMAmod1=accuracy(f5,test)["Test set","RMSE"],
+  ARIMAmod2=accuracy(f6,test)["Test set","RMSE"])
 ```
 
-```{r}
-accuracy(f1,test)["Test set","RMSE"]
-accuracy(f2,test)["Test set","RMSE"]
-accuracy(f3,test)["Test set","RMSE"]
-accuracy(f4,test)["Test set","RMSE"]
-accuracy(f5,test)["Test set","RMSE"]
-```
-
-```{r}
-autoplot(f5) +
+```{r lab17e}
+autoplot(f6) +
   autolayer(test, series="New data")
 ```
 
-# Lab Session 17
-
-```{r lab17a, dependson='retail'}
-(etsmodel <- ets(mytimeseries))
-accuracy(etsmodel)
+```{r lab17f}
+autoplot(hsales)
+mod <- auto.arima(hsales,
+                  stepwise=FALSE,
+                  approximation = FALSE)
+checkresiduals(mod)
+mod %>% forecast() %>% autoplot()
+hsales %>% ets() %>% forecast %>% autoplot()
 ```
 
-```{r lab17b}
-etsfc <- function(y,h)
-{
-  y %>% ets(model="MAM", damped=FALSE) %>% forecast(h=h)
-}
-e <- tsCV(mytimeseries, etsfc)
-sqrt(mean(e^2, na.rm=TRUE))
-ggtsdisplay(e)
-```
+# Lab Session 18
 
-```{r lab17c}
-lambda <- BoxCox.lambda(mytimeseries)
-(arimamodel <- auto.arima(mytimeseries, lambda=lambda))
-accuracy(arimamodel)
-```
-
-```r lab17d}
+```{r lab18a, dependson="lab17"}
 arimafc <- function(y,h)
 {
-  y %>% Arima(order=???, seasonal=???, lambda=??) %>% forecast(h=h)
+  y %>% Arima(order=c(1,1,0), seasonal=c(2,1,2), lambda=0) %>% forecast(h=h)
 }
-e <- tsCV(mytimeseries, arimafc)
-sqrt(mean(e^2, na.rm=TRUE))
-ggtsdisplay(e)
+e <- tsCV(mytimeseries, arimafc, h=12)
+
+colMeans(tail(e^2, -14), na.rm=TRUE) %>% sqrt()
+
+mean(tail(e^2, -14), na.rm=TRUE) %>% sqrt()
+
+ggtsdisplay(e[,1])
 ```
 
-```{r lab17e, dependson='retail'}
+```{r lab18b, dependson='retail'}
 etsfc <- function(y,h)
 {
-  y %>% ets(y) %>% forecast(h=h)
+  ets(y) %>% forecast(h=h)
 }
 arimafc <- function(y,h)
 {
-  y %>% auto.arima(y, lambda=BoxCox.lambda(y)) %>% forecast(h=h)
+  auto.arima(y, lambda=0) %>% forecast(h=h)
 }
-
-e1 <- tsCV(mytimeseries, etsfc)
-e2 <- tsCV(mytimeseries, arimafc)
-#e <- cbind(e1, e2) %>% na.omit()
-#colMeans(e^2)
+e1 <- tsCV(mytimeseries, etsfc, h=12)
+e2 <- tsCV(mytimeseries, arimafc, h=12)
+MSE <- cbind(
+  ETS = colMeans(tail(e1^2, -14), na.rm=TRUE),
+  ARIMA = colMeans(tail(e2^2, -14), na.rm=TRUE))
+colMeans(sqrt(MSE))
 ```
 
