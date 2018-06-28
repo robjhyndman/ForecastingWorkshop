@@ -144,7 +144,7 @@ A \alert{\textbf{hierarchical time series}} is a collection of several time seri
 \pause\alert{Examples}\vspace*{-0.2cm}
 
  * Pharmaceutical sales
- * Tourism demand by region and purpose
+ * Tourism demand by state and region
 
 ## Grouped time series
 \fontsize{13}{14}\sf

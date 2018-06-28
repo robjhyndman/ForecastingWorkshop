@@ -103,7 +103,7 @@ y_t &= \beta_0 + \beta_1 x_{1,t} + \dots + \beta_k x_{k,t} + \eta_t\\
 \begin{align*}
 y'_t &= \beta_1 x'_{1,t} + \dots + \beta_k x'_{k,t} + \eta'_t.\\
 \mbox{where}\quad
-& \phi(B)\eta_t = \theta(B)\varepsilon_t \\
+& \phi(B)\eta_t' = \theta(B)\varepsilon_t \\
 \text{and}\quad & y_t' = (1-B)^dy_t
 \end{align*}
 \end{block}
@@ -377,7 +377,7 @@ Example: $x$ is advertising which has a delayed effect
 
 ## Dynamic harmonic regression
 
- **Combine Fourier terms with ARIMA errors**
+**Combine Fourier terms with ARIMA errors**
 
 \fontsize{13}{14}\sf
 

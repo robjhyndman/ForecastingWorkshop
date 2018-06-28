@@ -22,34 +22,34 @@ library(fpp2)
 
 # Lab Session 19
 
-```{r lab18a}
+```{r lab19a}
 avecost <- motel[,"Takings"] / motel[,"Roomnights"]
 ```
 
 `cpimel` contains quarterly CPI values. We can use linear approximation to interpolate the quarterly data to obtain monthly CPI.
 
-```{r lab18b}
+```{r lab19b}
 mcpi <- ts(approx(time(cpimel), cpimel, time(motel), rule=2)$y,
   start=start(motel), frequency=frequency(motel))
 ```
 
-```{r lab18c}
+```{r lab19c}
 autoplot(cbind(avecost, mcpi), facets=TRUE)
 ```
 
 We expect avecost to be related to CPI, but the variance of average cost increases with the level. So logs will help. Also, average cost is likely to be a multiple of CPI as it will depend on lots of individual costs, each of which will increase with CPI. So logarithms will turn the multiplicative relationship into something additive which we can model.
 
-```{r lab18d}
+```{r lab19d}
 autoplot(log(cbind(avecost, mcpi)), facets=TRUE)
 ```
 
-```{r lab18e}
+```{r lab19e}
 (fit <- auto.arima(avecost, xreg=log(mcpi), lambda=0, biasadj=TRUE))
 ```
 
 We will use an ARIMA model for CPI:
 
-```{r lab18f}
+```{r lab19f}
 fitcpi <- auto.arima(mcpi)
 fccpi <- forecast(fitcpi, h=12)
 autoplot(fccpi)
@@ -57,7 +57,7 @@ autoplot(fccpi)
 
 Now we can forecast average cost
 
-```{r lab18g}
+```{r lab19g}
 fc <- forecast(fit, xreg=log(fccpi$mean))
 autoplot(fc)
 ```
@@ -73,36 +73,43 @@ train <- window(mytimeseries, end=c(2010,12))
 test <- window(mytimeseries, start=2011)
 ```
 
-```{r lab19a, dependson='retail'}
+```{r lab20a, dependson='retail'}
 lambda <- 0
-# Find the order of Fourier terms which gives minimum AIC
+# Find no. Fourier terms which gives min AIC
 bestmodel <- list(aicc=Inf)
 for(k in seq(6)) {
   fit <- auto.arima(train, lambda=lambda,
-    xreg=fourier(train, K=k))
+    xreg=fourier(train, K=k), seasonal=FALSE)
   if(fit$aicc < bestmodel$aicc) {
     bestmodel <- fit
     bestK <- k
   }
 }
-fc <- forecast(bestmodel, xreg=fourier(train, bestK, 24))
-accuracy(fc, test)
+fc <- forecast(bestmodel, 
+    xreg=fourier(train, bestK, h=length(test)))
 ```
 
-```{r lab19b, dependson='lab19a'}
+```{r lab20b, dependson='lab20a'}
 checkresiduals(fc)
 autoplot(fc)
+autoplot(fc) + autolayer(test)
+accuracy(fc, test)
 ```
 
 # Lab Session 21
 
-```{r lab20a}
+```{r lab21a}
 fit <- tbats(mytimeseries)
 checkresiduals(fit)
 forecast(fit) %>% autoplot
+
+fit <- tbats(train)
+fc <- forecast(fit, h=length(test)) 
+fc %>% autoplot() + autolayer(test)
+accuracy(fc, test)
 ```
 
-```{r lab20b}
+```{r lab21b}
 gastrain <- subset(gasoline, end=length(gasoline)-2*52)
 gastest <- subset(gasoline, start=length(gasoline)-2*52+1)
 fit <- tbats(gastrain)
@@ -112,12 +119,12 @@ autoplot(fc1)
 accuracy(fc1, gastest)
 ```
 
-```{r lab20c}
+```{r lab21c}
 fc2 <- stlf(gastrain)
 accuracy(fc2, gastest)
 ```
 
-```r lab20d}
+```r
 # Find the order of Fourier terms which gives minimum AIC
 bestmodel <- list(aicc=Inf)
 for(k in seq(26)) {
@@ -134,8 +141,9 @@ accuracy(fc3, gastest)
 
 # Lab Session 22
 
-```{r lab21a, fig.height=8}
+```{r lab22a, fig.height=8}
 library(hts)
+head(infantgts$bts)
 plot(infantgts)
 smatrix(infantgts)
 
@@ -156,13 +164,13 @@ forecast <- forecast(training, h=10)
 accuracy.gts(forecast, test)
 ```
 
-```{r lab21b}
+```{r lab22b}
 # Overall forecast accuracy
 rmse <- accuracy(forecast, test)["RMSE",]
 sqrt(sum(rmse^2))
 ```
 
-```{r lab21c}
+```{r lab22c}
 forecast_bu <- forecast(training, h=10, method="bu")
 sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 ```
@@ -170,7 +178,7 @@ sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 
 # Lab Session 23
 
-```{r lab22a, dependson='retail'}
+```{r lab23a, dependson='retail'}
 library(thief)
 train <- window(mytimeseries, end=c(2010,12))
 test <- window(mytimeseries, start=2011)
@@ -182,13 +190,13 @@ autoplot(mytimeseries) +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
-```{r lab22b, dependson=c('retail','lab22a')}
+```{r lab23b, dependson=c('retail','lab23a')}
 autoplot(train, include=60) +
   autolayer(fcthief, series="Thief") +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
-```{r lab22c, dependson='lab22a'}
+```{r lab23c, dependson='lab23a'}
 accuracy(fcarima, test)
 accuracy(fcthief, test)
 ```
