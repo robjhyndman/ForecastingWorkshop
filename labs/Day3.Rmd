@@ -182,18 +182,20 @@ sqrt(sum(accuracy(forecast_bu, test)["RMSE",]^2))
 library(thief)
 train <- window(mytimeseries, end=c(2010,12))
 test <- window(mytimeseries, start=2011)
-lambda <- BoxCox.lambda(mytimeseries)
+lambda <- 0
 fcarima <- forecast(auto.arima(train, lambda=lambda), h=length(test))
 fcthief <- thief(train, usemodel='arima', lambda=lambda, h=length(test))
 autoplot(mytimeseries) +
+  autolayer(test, series="Test data") +
   autolayer(fcthief, series="Thief") +
   autolayer(fcarima, series="ARIMA", PI=FALSE) 
 ```
 
 ```{r lab23b, dependson=c('retail','lab23a')}
-autoplot(train, include=60) +
+autoplot(window(train, start=2007)) +
+  autolayer(test, series="Test data") +
   autolayer(fcthief, series="Thief") +
-  autolayer(fcarima, series="ARIMA", PI=FALSE) 
+  autolayer(fcarima, series="ARIMA", PI=FALSE)
 ```
 
 ```{r lab23c, dependson='lab23a'}
