@@ -151,7 +151,7 @@ Complex roots of $1+\theta_1 z + \theta_2 z^2 + \dots + \theta_qz^q$ lie outside
 \begin{block}{Autoregressive Moving Average models:}\vspace*{-0.2cm}
 \begin{align*}
 y_{t}  &=  c  +  \phi_{1}y_{t - 1}  +  \cdots  +  \phi_{p}y_{t - p} \\
-& \hspace*{2.4cm}\text{} + \theta_{1}e_{t - 1} +  \cdots  + \theta_{q}e_{t - q} +  e_{t}.
+& \hspace*{2.4cm}\text{} + \theta_{1}\varepsilon_{t - 1} +  \cdots  + \theta_{q}\varepsilon_{t - q} +  \varepsilon_{t}.
 \end{align*}
 \end{block}\pause
 
